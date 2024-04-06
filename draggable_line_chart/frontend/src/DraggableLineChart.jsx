@@ -10,7 +10,7 @@ import {
 
 Chart.register(...registerables)
 
-class MyChartComponent extends StreamlitComponentBase {
+class DraggableLineChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     console.log(props.args)
@@ -130,4 +130,4 @@ class MyChartComponent extends StreamlitComponentBase {
   }
 }
 
-export default withStreamlitConnection(MyChartComponent)
+export default withStreamlitConnection(DraggableLineChart)

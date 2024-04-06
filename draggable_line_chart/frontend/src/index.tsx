@@ -1,10 +1,10 @@
 import React from "react"
 import ReactDOM from "react-dom"
-import MyComponent from "./MyComponent"
+import DraggableLinechart from "./DraggableLineChart"
 
 ReactDOM.render(
   <React.StrictMode>
-    <MyComponent />
+    <DraggableLinechart />
   </React.StrictMode>,
   document.getElementById("root")
 )
