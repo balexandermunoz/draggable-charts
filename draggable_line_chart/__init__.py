@@ -5,7 +5,7 @@ import streamlit.components.v1 as components
 # the component, and True when we're ready to package and distribute it.
 # (This is, of course, optional - there are innumerable ways to manage your
 # release process.)
-_RELEASE = False
+_RELEASE = True
 
 # Declare a Streamlit component. `declare_component` returns a function
 # that is used to create instances of the component. We're naming this
@@ -35,7 +35,7 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def draggable_line_chart(title: str, data: dict[dict[str: float]], colors: list[str], key=None):
+def draggable_line_chart(title: str, data: dict[dict[str: float]], colors: list[str]=None, key=None):
     """
     This component displays a line chart with interactive capabilities. The chart's title, data, and line colors can be customized.
 
@@ -45,8 +45,8 @@ def draggable_line_chart(title: str, data: dict[dict[str: float]], colors: list[
         The title of the chart.
     data : dict[dict[str: float]]
         The data to display in the chart. It can be df.to_dict() with only numbers.
-    colors : list[str]
-        A list of colors for the lines in the chart. Each color should be a string in a format accepted by CSS, such as a hex color code. The order of the colors corresponds to the order of the columns.
+    colors : list[str], optional
+        A list of colors for the lines in the chart. Each color should be a string in a format accepted by CSS, such as a hex color code. The order of the colors corresponds to the order of the datasets. If not provided, default colors will be used.
     key : str, optional
         An optional string to use as the unique key for the widget. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.
 
