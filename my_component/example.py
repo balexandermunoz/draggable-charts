@@ -1,4 +1,5 @@
 import streamlit as st
+import pandas as pd
 from my_component import my_component
 
 # Add some test code to play with the component while it's in development.
@@ -6,23 +7,10 @@ from my_component import my_component
 # app: `$ streamlit run my_component/example.py`
 
 st.subheader("Component with constant args")
-
-# Create an instance of our component with a constant `name` arg, and
-# print its output value.
-num_clicks = my_component("World")
-st.markdown("You've clicked %s times!" % int(num_clicks))
-
-st.markdown("---")
-st.subheader("Component with variable args")
-
-# Create a second instance of our component whose `name` arg will vary
-# based on a text_input widget.
-#
-# We use the special "key" argument to assign a fixed identity to this
-# component instance. By default, when a component's arguments change,
-# it is considered a new instance and will be re-mounted on the frontend
-# and lose its current state. In this case, we want to vary the component's
-# "name" argument without having it get recreated.
-name_input = st.text_input("Enter a name", value="Streamlit")
-num_clicks = my_component(name_input, key="foo")
-st.markdown("You've clicked %s times!" % int(num_clicks))
+initial_data = pd.DataFrame({
+    "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Col2": [1, 4, 9, 16, 25, 36, 49, 64, 81, 100],
+    "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]
+}).to_dict()
+new_data = my_component("My Plot", initial_data, colors=None, key="foo")
+new_data

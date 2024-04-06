@@ -35,7 +35,8 @@ else:
     # build directory:
     parent_dir = os.path.dirname(os.path.abspath(__file__))
     build_dir = os.path.join(parent_dir, "frontend/build")
-    _component_func = components.declare_component("my_component", path=build_dir)
+    _component_func = components.declare_component(
+        "my_component", path=build_dir)
 
 
 # Create a wrapper function for the component. This is an optional
@@ -43,35 +44,27 @@ else:
 # `declare_component` and call it done. The wrapper allows us to customize
 # our component's API: we can pre-process its input args, post-process its
 # output value, and add a docstring for users.
-def my_component(name, key=None):
-    """Create a new instance of "my_component".
+def my_component(title: str, data: dict[dict[str: float]], colors: list[str], key=None):
+    """
+    This component displays a line chart with interactive capabilities. The chart's title, data, and line colors can be customized.
 
     Parameters
     ----------
-    name: str
-        The name of the thing we're saying hello to. The component will display
-        the text "Hello, {name}!"
-    key: str or None
-        An optional key that uniquely identifies this component. If this is
-        None, and the component's arguments are changed, the component will
-        be re-mounted in the Streamlit frontend and lose its current state.
+    title : str
+        The title of the chart.
+    data : dict[dict[str: float]]
+        The data to display in the chart. It can be df.to_dict() with only numbers.
+    colors : list[str]
+        A list of colors for the lines in the chart. Each color should be a string in a format accepted by CSS, such as a hex color code. The order of the colors corresponds to the order of the columns.
+    key : str, optional
+        An optional string to use as the unique key for the widget. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.
 
     Returns
     -------
-    int
-        The number of times the component's "Click Me" button has been clicked.
-        (This is the value passed to `Streamlit.setComponentValue` on the
-        frontend.)
-
+    dict[dict[str: float]]
+        The data of the chart after user interaction. The format is the same as the input format.
     """
-    # Call through to our private component function. Arguments we pass here
-    # will be sent to the frontend, where they'll be available in an "args"
-    # dictionary.
-    #
-    # "default" is a special argument that specifies the initial return
-    # value of the component before the user has interacted with it.
-    component_value = _component_func(name=name, key=key, default=0)
+    component_value = _component_func(
+        title=title, data=data, colors=colors, key=key, default=0)
 
-    # We could modify the value returned from the component if we wanted.
-    # There's no need to do this in our simple example - but it's an option.
     return component_value

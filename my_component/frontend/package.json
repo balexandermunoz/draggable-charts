@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "chart.js": "^4.4.2",
     "react": "^16.13.1",
+    "react-chartjs-2": "^5.2.0",
     "react-dom": "^16.13.1",
     "streamlit-component-lib": "^2.0.0"
   },
