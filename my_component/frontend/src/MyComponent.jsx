@@ -41,6 +41,7 @@ class MyChartComponent extends StreamlitComponentBase {
   }
 
   options = {
+    responsive: true,
     animation: {
       duration: 0,
     },
@@ -56,8 +57,8 @@ class MyChartComponent extends StreamlitComponentBase {
       title: {
          display: true,
          text: this.props.args.title
-       }
-    }
+       },
+    },
   };
 
   downHandler = (event) => {
@@ -111,7 +112,6 @@ class MyChartComponent extends StreamlitComponentBase {
 
   render() {
     return (
-      <div style={{ position: "relative" }}>
         <Line
           ref={this.chartRef}
           data={this.state.chartData}
@@ -120,7 +120,6 @@ class MyChartComponent extends StreamlitComponentBase {
           onPointerUp={this.upHandler}
           onPointerMove={this.moveHandler}
         />
-      </div>
     );
   }
 }

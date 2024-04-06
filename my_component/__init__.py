@@ -65,6 +65,6 @@ def my_component(title: str, data: dict[dict[str: float]], colors: list[str], ke
         The data of the chart after user interaction. The format is the same as the input format.
     """
     component_value = _component_func(
-        title=title, data=data, colors=colors, key=key, default=0)
+        title=title, data=data, colors=colors, key=key, default=data)
 
     return component_value
