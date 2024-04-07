@@ -73,8 +73,11 @@ class DraggableLineChart extends StreamlitComponentBase {
         mode: "nearest",
       },
       onHover: (event, chartElement) => {
-        if (event && event.target) {
-          event.target.style.cursor = chartElement[0] ? "pointer" : "default"
+        if (chartElement.length > 0) {
+          console.log(event, chartElement)
+          event.native.target.style.cursor = "crosshair"
+        } else {
+          event.native.target.style.cursor = "default"
         }
       },
       plugins: {
@@ -92,6 +95,15 @@ class DraggableLineChart extends StreamlitComponentBase {
         title: {
           display: true,
           text: options.title,
+        },
+        legend: {
+          onHover: (event, legendItem, legend) => {
+            if (legendItem) {
+              event.native.target.style.cursor = "pointer"
+            } else {
+              event.native.target.style.cursor = "default"
+            }
+          },
         },
       },
       scales: {
