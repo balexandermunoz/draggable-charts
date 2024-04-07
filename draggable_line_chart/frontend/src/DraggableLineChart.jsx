@@ -7,8 +7,9 @@ import {
   StreamlitComponentBase,
   withStreamlitConnection,
 } from "streamlit-component-lib"
+import zoomPlugin from "chartjs-plugin-zoom";
 
-Chart.register(...registerables)
+Chart.register(...registerables, zoomPlugin)
 
 class DraggableLineChart extends StreamlitComponentBase {
   constructor(props) {
@@ -56,6 +57,16 @@ class DraggableLineChart extends StreamlitComponentBase {
       }
     },
     plugins: {
+      zoom: {
+        zoom: {
+          wheel: {
+            enabled: true // SET SCROOL ZOOM TO TRUE
+          }
+        },
+        pan: {
+          enabled: false, // SET PAN TO FALSE
+        }
+      },
       title: {
         display: true,
         text: this.props.args.title,
