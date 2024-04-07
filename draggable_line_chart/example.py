@@ -8,6 +8,6 @@ initial_data = pd.DataFrame({
     "Col2": [1, 4, 9, 16, 25, 36, 49, 64, 81, 100],
     "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -9, -10]
 }).to_dict()
-
-new_data = draggable_line_chart("My Plot", initial_data, colors=None, key="foo")
+colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+new_data = draggable_line_chart("My Plot", initial_data, colors=colors, key="foo")
 new_data
