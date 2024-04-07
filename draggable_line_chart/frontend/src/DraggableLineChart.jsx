@@ -7,7 +7,7 @@ import {
   StreamlitComponentBase,
   withStreamlitConnection,
 } from "streamlit-component-lib"
-import zoomPlugin from "chartjs-plugin-zoom";
+import zoomPlugin from "chartjs-plugin-zoom"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -61,12 +61,12 @@ class DraggableLineChart extends StreamlitComponentBase {
       zoom: {
         zoom: {
           wheel: {
-            enabled: true // SET SCROOL ZOOM TO TRUE
-          }
+            enabled: true, // SET SCROOL ZOOM TO TRUE
+          },
         },
         pan: {
           enabled: false, // SET PAN TO FALSE
-        }
+        },
       },
       title: {
         display: true,
@@ -78,17 +78,17 @@ class DraggableLineChart extends StreamlitComponentBase {
         display: true,
         title: {
           display: true,
-          text: 'Index'
-        }
+          text: "Index",
+        },
       },
       y: {
         display: true,
         title: {
           display: true,
-          text: 'Value'
-        }
-      }
-    }
+          text: "Value",
+        },
+      },
+    },
   }
 
   downHandler = (event) => {
