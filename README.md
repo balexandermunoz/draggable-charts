@@ -1,6 +1,6 @@
-# streamlit-draggable-chart
+# st-draggable-line-chart
 
-Streamlit component that displays a line chart with draggable points. Users can click and drag points on the chart to adjust their values. The updated data of the chart is returned.",
+Streamlit component that displays a line chart with draggable points. Users can click and drag points on the chart to adjust their values. The updated data of the chart is returned.
 
 ## Installation instructions
 
