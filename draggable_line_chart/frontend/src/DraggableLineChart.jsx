@@ -14,7 +14,6 @@ Chart.register(...registerables, zoomPlugin)
 class DraggableLineChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
-    console.log(props.args)
     this.chartRef = React.createRef()
 
     const datasets = Object.entries(props.args.data).map(
@@ -29,11 +28,13 @@ class DraggableLineChart extends StreamlitComponentBase {
         }
       }
     )
+
     if (props.args.colors) {
       datasets.forEach((dataset, index) => {
         dataset.borderColor = props.args.colors[index]
       })
     }
+
     this.state = {
       activePoint: null,
       chartData: {
@@ -98,7 +99,6 @@ class DraggableLineChart extends StreamlitComponentBase {
       )
 
       Streamlit.setComponentValue(data)
-      console.log(data)
     }
     this.setState({ activePoint: null })
   }
