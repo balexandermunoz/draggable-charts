@@ -61,11 +61,12 @@ class DraggableLineChart extends StreamlitComponentBase {
       zoom: {
         zoom: {
           wheel: {
-            enabled: true, // SET SCROOL ZOOM TO TRUE
+            enabled: true,
           },
+          mode: "x",
         },
         pan: {
-          enabled: false, // SET PAN TO FALSE
+          enabled: false,
         },
       },
       title: {
