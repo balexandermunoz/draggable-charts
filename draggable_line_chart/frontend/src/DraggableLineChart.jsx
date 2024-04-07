@@ -17,7 +17,11 @@ class DraggableLineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      chartData: this.createChartData(props.args.data, this.props.args.options),
+      chartData: this.createChartData(
+        props.args.data,
+        props.args.options.colors
+      ),
+      options: this.createOptions(props.args.options),
     }
   }
 
@@ -29,6 +33,7 @@ class DraggableLineChart extends StreamlitComponentBase {
           this.props.args.data,
           this.props.args.options
         ),
+        options: this.createOptions(this.props.args.options),
       })
     }
   }
@@ -58,52 +63,54 @@ class DraggableLineChart extends StreamlitComponentBase {
     }
   }
 
-  options = {
-    responsive: true,
-    animation: {
-      duration: 0,
-    },
-    tooltips: {
-      mode: "nearest",
-    },
-    onHover: (event, chartElement) => {
-      if (event && event.target) {
-        event.target.style.cursor = chartElement[0] ? "pointer" : "default"
-      }
-    },
-    plugins: {
-      zoom: {
+  createOptions(options) {
+    return {
+      responsive: true,
+      animation: {
+        duration: 0,
+      },
+      tooltips: {
+        mode: "nearest",
+      },
+      onHover: (event, chartElement) => {
+        if (event && event.target) {
+          event.target.style.cursor = chartElement[0] ? "pointer" : "default"
+        }
+      },
+      plugins: {
         zoom: {
-          wheel: {
-            enabled: true,
+          zoom: {
+            wheel: {
+              enabled: true,
+            },
+            mode: "x",
           },
-          mode: "x",
+          pan: {
+            enabled: false,
+          },
         },
-        pan: {
-          enabled: false,
-        },
-      },
-      title: {
-        display: true,
-        text: this.props.args.options.title,
-      },
-    },
-    scales: {
-      x: {
-        display: true,
         title: {
           display: true,
-          text:  this.props.args.options.x_label,
+          text: options.title,
         },
       },
-      y: {
-        display: true,
-        title: {
+      scales: {
+        x: {
           display: true,
-          text: this.props.args.options.y_label,
+          title: {
+            display: true,
+            text: options.x_label,
+          },
+        },
+        y: {
+          display: true,
+          title: {
+            display: true,
+            text: options.y_label,
+          },
         },
       },
-    },
+    }
   }
 
   downHandler = (event) => {
@@ -163,7 +170,7 @@ class DraggableLineChart extends StreamlitComponentBase {
       <Line
         ref={this.chartRef}
         data={this.state.chartData}
-        options={this.options}
+        options={this.state.options}
         onPointerDown={this.downHandler}
         onPointerUp={this.upHandler}
         onPointerMove={this.moveHandler}
