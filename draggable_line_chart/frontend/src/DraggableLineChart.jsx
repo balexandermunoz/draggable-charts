@@ -73,6 +73,22 @@ class DraggableLineChart extends StreamlitComponentBase {
         text: this.props.args.title,
       },
     },
+    scales: {
+      x: {
+        display: true,
+        title: {
+          display: true,
+          text: 'Index'
+        }
+      },
+      y: {
+        display: true,
+        title: {
+          display: true,
+          text: 'Value'
+        }
+      }
+    }
   }
 
   downHandler = (event) => {
