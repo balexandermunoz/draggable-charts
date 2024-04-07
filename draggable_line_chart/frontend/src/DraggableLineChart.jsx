@@ -74,7 +74,6 @@ class DraggableLineChart extends StreamlitComponentBase {
       },
       onHover: (event, chartElement) => {
         if (chartElement.length > 0) {
-          console.log(event, chartElement)
           event.native.target.style.cursor = "crosshair"
         } else {
           event.native.target.style.cursor = "default"
