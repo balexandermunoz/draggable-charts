@@ -15,8 +15,23 @@ class DraggableLineChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
+    this.state = {
+      activePoint: null,
+      chartData: this.createChartData(props.args.data, props.args.colors),
+    }
+  }
 
-    const datasets = Object.entries(props.args.data).map(
+  componentDidUpdate(prevProps) {
+    if (this.props.args.data !== prevProps.args.data) {
+      this.setState({
+        chartData: this.createChartData(this.props.args.data, this.props.args.colors),
+      })
+    }
+    Streamlit.setFrameHeight();
+  }
+
+  createChartData(data, colors) {
+    const datasets = Object.entries(data).map(
       ([colName, colData], index) => {
         const data = Object.values(colData)
         return {
@@ -29,18 +44,15 @@ class DraggableLineChart extends StreamlitComponentBase {
       }
     )
 
-    if (props.args.colors) {
+    if (colors) {
       datasets.forEach((dataset, index) => {
-        dataset.borderColor = props.args.colors[index]
+        dataset.borderColor = colors[index]
       })
     }
 
-    this.state = {
-      activePoint: null,
-      chartData: {
-        labels: Object.keys(props.args.data.Col1),
-        datasets: datasets,
-      },
+    return {
+      labels: Object.keys(data.Col1),
+      datasets: datasets,
     }
   }
 
