@@ -22,27 +22,28 @@ class DraggableLineChart extends StreamlitComponentBase {
   }
 
   componentDidUpdate(prevProps) {
-    Streamlit.setFrameHeight();
+    Streamlit.setFrameHeight()
     if (this.props.args !== prevProps.args) {
       this.setState({
-        chartData: this.createChartData(this.props.args.data, this.props.args.colors),
+        chartData: this.createChartData(
+          this.props.args.data,
+          this.props.args.colors
+        ),
       })
     }
   }
 
   createChartData(data, colors) {
-    const datasets = Object.entries(data).map(
-      ([colName, colData], index) => {
-        const data = Object.values(colData)
-        return {
-          data,
-          label: colName,
-          fill: false,
-          lineTension: 0.3,
-          cubicInterpolationMode: "monotone",
-        }
+    const datasets = Object.entries(data).map(([colName, colData], index) => {
+      const data = Object.values(colData)
+      return {
+        data,
+        label: colName,
+        fill: false,
+        lineTension: 0.3,
+        cubicInterpolationMode: "monotone",
       }
-    )
+    })
 
     if (colors) {
       datasets.forEach((dataset, index) => {
