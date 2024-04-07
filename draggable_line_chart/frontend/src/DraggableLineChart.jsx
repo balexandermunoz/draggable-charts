@@ -17,7 +17,7 @@ class DraggableLineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      chartData: this.createChartData(props.args.data, props.args.colors),
+      chartData: this.createChartData(props.args.data, this.props.args.options),
     }
   }
 
@@ -27,13 +27,13 @@ class DraggableLineChart extends StreamlitComponentBase {
       this.setState({
         chartData: this.createChartData(
           this.props.args.data,
-          this.props.args.colors
+          this.props.args.options
         ),
       })
     }
   }
 
-  createChartData(data, colors) {
+  createChartData(data, options) {
     const datasets = Object.entries(data).map(([colName, colData], index) => {
       const data = Object.values(colData)
       return {
@@ -45,9 +45,10 @@ class DraggableLineChart extends StreamlitComponentBase {
       }
     })
 
-    if (colors) {
+    if (options.colors) {
       datasets.forEach((dataset, index) => {
-        dataset.borderColor = colors[index]
+        dataset.backgroundColor = options.colors[index]
+        dataset.borderColor = options.colors[index]
       })
     }
 
@@ -84,7 +85,7 @@ class DraggableLineChart extends StreamlitComponentBase {
       },
       title: {
         display: true,
-        text: this.props.args.title,
+        text: this.props.args.options.title,
       },
     },
     scales: {
@@ -92,14 +93,14 @@ class DraggableLineChart extends StreamlitComponentBase {
         display: true,
         title: {
           display: true,
-          text: "Index",
+          text:  this.props.args.options.x_label,
         },
       },
       y: {
         display: true,
         title: {
           display: true,
-          text: "Value",
+          text: this.props.args.options.y_label,
         },
       },
     },
