@@ -22,12 +22,12 @@ class DraggableLineChart extends StreamlitComponentBase {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props.args.data !== prevProps.args.data) {
+    Streamlit.setFrameHeight();
+    if (this.props.args !== prevProps.args) {
       this.setState({
         chartData: this.createChartData(this.props.args.data, this.props.args.colors),
       })
     }
-    Streamlit.setFrameHeight();
   }
 
   createChartData(data, colors) {
