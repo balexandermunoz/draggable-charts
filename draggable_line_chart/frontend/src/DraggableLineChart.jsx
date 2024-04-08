@@ -112,12 +112,18 @@ class DraggableLineChart extends StreamlitComponentBase {
             display: true,
             text: options.x_label,
           },
+          grid: {
+            display: options.x_grid
+          },
         },
         y: {
           display: true,
           title: {
             display: true,
             text: options.y_label,
+          },
+          grid: {
+            display: options.y_grid
           },
         },
       },

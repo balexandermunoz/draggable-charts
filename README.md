@@ -30,6 +30,8 @@ plot_options = {
     "colors": ['#1f77b4', '#ff7f0e', '#2ca02c'],
     "x_label": "X Axis",
     "y_label": "Y Axis",
+    "x_grid": True,
+    "y_grid": True,
 }
 new_data = draggable_line_chart(data=initial_data.to_dict(), options=plot_options)
 new_data

@@ -45,6 +45,8 @@ def draggable_line_chart(data: dict[dict[str: float]], options: dict[str: any] =
         - 'colors': A list of colors for the lines in the chart. Each color should be a string in a format accepted by CSS, such as a hex color code. The order of the colors corresponds to the order of the datasets.
         - 'x_label': The label for the x-axis.
         - 'y_label': The label for the y-axis.
+        - 'x_grid': A boolean indicating whether to display the grid for the x-axis. If not provided, the grid will be displayed by default.
+        - 'y_grid': A boolean indicating whether to display the grid for the y-axis. If not provided, the grid will be displayed by default.
         If not provided, default options will be used.
     key : str, optional
         An optional string to use as the unique key for the widget. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.
@@ -54,6 +56,10 @@ def draggable_line_chart(data: dict[dict[str: float]], options: dict[str: any] =
     dict[dict[str: float]]
         The data of the chart after user interaction. The format is the same as the input format.
     """
+    if not options:
+        options = {
+            "x_grid": True,
+            "y_grid": True}
     component_value = _draggable_line_chart(
         data=data, options=options, key=key, default=data)
 
