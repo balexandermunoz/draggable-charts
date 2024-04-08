@@ -1,4 +1,4 @@
-export function createOptions(options) {
+export function createOptions(options, theme) {
   return {
     responsive: true,
     animation: {
@@ -13,7 +13,7 @@ export function createOptions(options) {
       title: createTitleOptions(options),
       legend: createLegendOptions(),
     },
-    scales: createScalesOptions(options),
+    scales: createScalesOptions(options, theme),
   }
 }
 
@@ -60,7 +60,7 @@ function createLegendOptions() {
   }
 }
 
-function createScalesOptions(options) {
+function createScalesOptions(options, theme) {
   return {
     x: {
       display: true,
@@ -70,6 +70,7 @@ function createScalesOptions(options) {
       },
       grid: {
         display: options.x_grid,
+        color: theme.fadedText05
       },
     },
     y: {
@@ -80,6 +81,7 @@ function createScalesOptions(options) {
       },
       grid: {
         display: options.y_grid,
+        color: theme.fadedText05
       },
     },
   }

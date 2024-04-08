@@ -20,7 +20,7 @@ class DraggableLineChart extends StreamlitComponentBase {
     this.state = {
       activePoint: null,
       chartData: createChartData(props.args.data, props.args.options.colors),
-      options: createOptions(props.args.options),
+      options: createOptions(props.args.options, props.theme),
     }
   }
 
@@ -32,7 +32,7 @@ class DraggableLineChart extends StreamlitComponentBase {
           this.props.args.data,
           this.props.args.options
         ),
-        options: createOptions(this.props.args.options),
+        options: createOptions(this.props.args.options, this.props.theme),
       })
     }
   }
