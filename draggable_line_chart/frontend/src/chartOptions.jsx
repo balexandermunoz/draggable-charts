@@ -1,66 +1,66 @@
 export function createOptions(options) {
-    return {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-      tooltips: {
-        mode: "nearest",
-      },
-      onHover: (event, chartElement) => {
-        if (chartElement.length > 0) {
-          event.native.target.style.cursor = "crosshair"
-        } else {
-          event.native.target.style.cursor = "default"
-        }
-      },
-      plugins: {
+  return {
+    responsive: true,
+    animation: {
+      duration: 0,
+    },
+    tooltips: {
+      mode: "nearest",
+    },
+    onHover: (event, chartElement) => {
+      if (chartElement.length > 0) {
+        event.native.target.style.cursor = "crosshair"
+      } else {
+        event.native.target.style.cursor = "default"
+      }
+    },
+    plugins: {
+      zoom: {
         zoom: {
-          zoom: {
-            wheel: {
-              enabled: true,
-            },
-            mode: "x",
+          wheel: {
+            enabled: true,
           },
-          pan: {
-            enabled: false,
-          },
+          mode: "x",
         },
+        pan: {
+          enabled: false,
+        },
+      },
+      title: {
+        display: true,
+        text: options.title,
+      },
+      legend: {
+        onHover: (event, legendItem, legend) => {
+          if (legendItem) {
+            event.native.target.style.cursor = "pointer"
+          } else {
+            event.native.target.style.cursor = "default"
+          }
+        },
+      },
+    },
+    scales: {
+      x: {
+        display: true,
         title: {
           display: true,
-          text: options.title,
+          text: options.x_label,
         },
-        legend: {
-          onHover: (event, legendItem, legend) => {
-            if (legendItem) {
-              event.native.target.style.cursor = "pointer"
-            } else {
-              event.native.target.style.cursor = "default"
-            }
-          },
+        grid: {
+          display: options.x_grid,
         },
       },
-      scales: {
-        x: {
+      y: {
+        display: true,
+        title: {
           display: true,
-          title: {
-            display: true,
-            text: options.x_label,
-          },
-          grid: {
-            display: options.x_grid
-          },
+          text: options.y_label,
         },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: options.y_label,
-          },
-          grid: {
-            display: options.y_grid
-          },
+        grid: {
+          display: options.y_grid,
         },
       },
-    }
+    },
   }
+}

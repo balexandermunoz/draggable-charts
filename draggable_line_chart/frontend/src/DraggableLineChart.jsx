@@ -1,15 +1,15 @@
-import React from "react"
 import { Chart, registerables } from "chart.js"
 import { getRelativePosition } from "chart.js/helpers"
+import zoomPlugin from "chartjs-plugin-zoom"
+import React from "react"
 import { Line, getElementAtEvent } from "react-chartjs-2"
-import { createOptions } from "./chartOptions"
-import { createChartData } from "./chartData"
 import {
   Streamlit,
   StreamlitComponentBase,
   withStreamlitConnection,
 } from "streamlit-component-lib"
-import zoomPlugin from "chartjs-plugin-zoom"
+import { createChartData } from "./chartData"
+import { createOptions } from "./chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -19,10 +19,7 @@ class DraggableLineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      chartData: createChartData(
-        props.args.data,
-        props.args.options.colors
-      ),
+      chartData: createChartData(props.args.data, props.args.options.colors),
       options: createOptions(props.args.options),
     }
   }
