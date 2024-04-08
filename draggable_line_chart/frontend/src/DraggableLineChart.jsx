@@ -2,6 +2,7 @@ import React from "react"
 import { Chart, registerables } from "chart.js"
 import { getRelativePosition } from "chart.js/helpers"
 import { Line, getElementAtEvent } from "react-chartjs-2"
+import { createOptions } from "./chartOptions"
 import {
   Streamlit,
   StreamlitComponentBase,
@@ -21,7 +22,7 @@ class DraggableLineChart extends StreamlitComponentBase {
         props.args.data,
         props.args.options.colors
       ),
-      options: this.createOptions(props.args.options),
+      options: createOptions(props.args.options),
     }
   }
 
@@ -33,7 +34,7 @@ class DraggableLineChart extends StreamlitComponentBase {
           this.props.args.data,
           this.props.args.options
         ),
-        options: this.createOptions(this.props.args.options),
+        options: createOptions(this.props.args.options),
       })
     }
   }
@@ -60,73 +61,6 @@ class DraggableLineChart extends StreamlitComponentBase {
     return {
       labels: Object.keys(data.Col1),
       datasets: datasets,
-    }
-  }
-
-  createOptions(options) {
-    return {
-      responsive: true,
-      animation: {
-        duration: 0,
-      },
-      tooltips: {
-        mode: "nearest",
-      },
-      onHover: (event, chartElement) => {
-        if (chartElement.length > 0) {
-          event.native.target.style.cursor = "crosshair"
-        } else {
-          event.native.target.style.cursor = "default"
-        }
-      },
-      plugins: {
-        zoom: {
-          zoom: {
-            wheel: {
-              enabled: true,
-            },
-            mode: "x",
-          },
-          pan: {
-            enabled: false,
-          },
-        },
-        title: {
-          display: true,
-          text: options.title,
-        },
-        legend: {
-          onHover: (event, legendItem, legend) => {
-            if (legendItem) {
-              event.native.target.style.cursor = "pointer"
-            } else {
-              event.native.target.style.cursor = "default"
-            }
-          },
-        },
-      },
-      scales: {
-        x: {
-          display: true,
-          title: {
-            display: true,
-            text: options.x_label,
-          },
-          grid: {
-            display: options.x_grid
-          },
-        },
-        y: {
-          display: true,
-          title: {
-            display: true,
-            text: options.y_label,
-          },
-          grid: {
-            display: options.y_grid
-          },
-        },
-      },
     }
   }
 
