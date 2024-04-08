@@ -10,7 +10,7 @@ export function createChartData(data, options) {
     }
   })
 
-  if (options.colors) {
+  if (options && options.colors) {
     datasets.forEach((dataset, index) => {
       dataset.backgroundColor = options.colors[index]
       dataset.borderColor = options.colors[index]
