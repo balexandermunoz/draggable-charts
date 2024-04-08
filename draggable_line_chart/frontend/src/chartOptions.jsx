@@ -7,59 +7,79 @@ export function createOptions(options) {
     tooltips: {
       mode: "nearest",
     },
-    onHover: (event, chartElement) => {
-      if (chartElement.length > 0) {
-        event.native.target.style.cursor = "crosshair"
+    onHover: createHoverOptions(),
+    plugins: {
+      zoom: createZoomOptions(),
+      title: createTitleOptions(options),
+      legend: createLegendOptions(),
+    },
+    scales: createScalesOptions(options),
+  }
+}
+
+function createHoverOptions() {
+  return (event, chartElement) => {
+    if (chartElement.length > 0) {
+      event.native.target.style.cursor = "crosshair"
+    } else {
+      event.native.target.style.cursor = "default"
+    }
+  }
+}
+
+function createZoomOptions() {
+  return {
+    zoom: {
+      wheel: {
+        enabled: true,
+      },
+      mode: "x",
+    },
+    pan: {
+      enabled: false,
+    },
+  }
+}
+
+function createTitleOptions(options) {
+  return {
+    display: true,
+    text: options.title,
+  }
+}
+
+function createLegendOptions() {
+  return {
+    onHover: (event, legendItem, legend) => {
+      if (legendItem) {
+        event.native.target.style.cursor = "pointer"
       } else {
         event.native.target.style.cursor = "default"
       }
     },
-    plugins: {
-      zoom: {
-        zoom: {
-          wheel: {
-            enabled: true,
-          },
-          mode: "x",
-        },
-        pan: {
-          enabled: false,
-        },
-      },
+  }
+}
+
+function createScalesOptions(options) {
+  return {
+    x: {
+      display: true,
       title: {
         display: true,
-        text: options.title,
+        text: options.x_label,
       },
-      legend: {
-        onHover: (event, legendItem, legend) => {
-          if (legendItem) {
-            event.native.target.style.cursor = "pointer"
-          } else {
-            event.native.target.style.cursor = "default"
-          }
-        },
+      grid: {
+        display: options.x_grid,
       },
     },
-    scales: {
-      x: {
+    y: {
+      display: true,
+      title: {
         display: true,
-        title: {
-          display: true,
-          text: options.x_label,
-        },
-        grid: {
-          display: options.x_grid,
-        },
+        text: options.y_label,
       },
-      y: {
-        display: true,
-        title: {
-          display: true,
-          text: options.y_label,
-        },
-        grid: {
-          display: options.y_grid,
-        },
+      grid: {
+        display: options.y_grid,
       },
     },
   }
