@@ -3,6 +3,7 @@ import { Chart, registerables } from "chart.js"
 import { getRelativePosition } from "chart.js/helpers"
 import { Line, getElementAtEvent } from "react-chartjs-2"
 import { createOptions } from "./chartOptions"
+import { createChartData } from "./chartData"
 import {
   Streamlit,
   StreamlitComponentBase,
@@ -18,7 +19,7 @@ class DraggableLineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      chartData: this.createChartData(
+      chartData: createChartData(
         props.args.data,
         props.args.options.colors
       ),
@@ -30,37 +31,12 @@ class DraggableLineChart extends StreamlitComponentBase {
     Streamlit.setFrameHeight()
     if (this.props.args !== prevProps.args) {
       this.setState({
-        chartData: this.createChartData(
+        chartData: createChartData(
           this.props.args.data,
           this.props.args.options
         ),
         options: createOptions(this.props.args.options),
       })
-    }
-  }
-
-  createChartData(data, options) {
-    const datasets = Object.entries(data).map(([colName, colData], index) => {
-      const data = Object.values(colData)
-      return {
-        data,
-        label: colName,
-        fill: false,
-        lineTension: 0.3,
-        cubicInterpolationMode: "monotone",
-      }
-    })
-
-    if (options.colors) {
-      datasets.forEach((dataset, index) => {
-        dataset.backgroundColor = options.colors[index]
-        dataset.borderColor = options.colors[index]
-      })
-    }
-
-    return {
-      labels: Object.keys(data.Col1),
-      datasets: datasets,
     }
   }
 
