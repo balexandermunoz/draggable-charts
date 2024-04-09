@@ -37,12 +37,18 @@ class DraggableLineChart extends StreamlitComponentBase {
     }
   }
 
+  togglePan(enabled) {
+    this.chartRef.current.options.plugins.zoom.pan.enabled = enabled;
+    this.chartRef.current.update();
+  }
+
   downHandler = (event) => {
     const points = getElementAtEvent(this.chartRef.current, event, {
       intersect: false,
     })
     if (points.length > 0) {
       this.setState({ activePoint: points[0] })
+      this.togglePan(false)
     }
   }
 
@@ -59,10 +65,10 @@ class DraggableLineChart extends StreamlitComponentBase {
         },
         {}
       )
-
+      this.setState({ activePoint: null })
+      this.togglePan(true)
       Streamlit.setComponentValue(data)
     }
-    this.setState({ activePoint: null })
   }
 
   moveHandler = (event) => {

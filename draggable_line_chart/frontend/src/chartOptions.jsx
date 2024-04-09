@@ -36,7 +36,7 @@ function createZoomOptions() {
       mode: "xy",
     },
     pan: {
-      enabled: false,
+      enabled: true,
     },
     limits: {
       x: { min: "original", max: "original" },
