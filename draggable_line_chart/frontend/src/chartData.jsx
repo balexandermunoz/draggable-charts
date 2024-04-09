@@ -1,5 +1,4 @@
 export function createChartData(data, options) {
-  console.log(data)
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = Object.values(colData)
     return {
