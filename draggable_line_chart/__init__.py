@@ -1,4 +1,5 @@
 import os
+from typing import Any, Dict
 
 import streamlit.components.v1 as components
 
@@ -31,7 +32,11 @@ else:
         "draggable_line_chart", path=build_dir)
 
 
-def draggable_line_chart(data: dict[dict[str: float]], options: dict[str: any] = None, key: str = None):
+def draggable_line_chart(
+    data: Dict[str, Dict[str, float]],
+    options: Dict[str, Any] = None,
+    key: str = None
+):
     """
     This component displays a line chart with interactive capabilities. The chart's title, data, and line colors can be customized.
 
