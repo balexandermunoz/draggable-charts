@@ -33,10 +33,14 @@ function createZoomOptions() {
       wheel: {
         enabled: true,
       },
-      mode: "x",
+      mode: "xy",
     },
     pan: {
       enabled: false,
+    },
+    limits: {
+      x: { min: "original", max: "original" },
+      y: { min: "original", max: "original" },
     },
   }
 }
@@ -70,7 +74,7 @@ function createScalesOptions(options, theme) {
       },
       grid: {
         display: options.x_grid,
-        color: theme.fadedText05
+        color: theme.fadedText05,
       },
     },
     y: {
@@ -81,7 +85,7 @@ function createScalesOptions(options, theme) {
       },
       grid: {
         display: options.y_grid,
-        color: theme.fadedText05
+        color: theme.fadedText05,
       },
     },
   }
