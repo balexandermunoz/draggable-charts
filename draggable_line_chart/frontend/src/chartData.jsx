@@ -1,4 +1,5 @@
 export function createChartData(data, options) {
+  console.log(data)
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = Object.values(colData)
     return {
@@ -18,7 +19,7 @@ export function createChartData(data, options) {
   }
 
   return {
-    labels: Object.keys(data.Col1),
+    labels: Object.keys(data[Object.keys(data)[0]]),
     datasets: datasets,
   }
 }
