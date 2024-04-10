@@ -54,6 +54,8 @@ function createTitleOptions(options) {
 
 function createLegendOptions() {
   return {
+    position: "right",
+    align: "center",
     onHover: (event, legendItem, legend) => {
       if (legendItem) {
         event.native.target.style.cursor = "pointer"
