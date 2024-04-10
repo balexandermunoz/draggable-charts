@@ -11,7 +11,7 @@ export function createOptions(options, theme) {
     plugins: {
       zoom: createZoomOptions(),
       title: createTitleOptions(options),
-      legend: createLegendOptions(),
+      legend: createLegendOptions(options),
     },
     scales: createScalesOptions(options, theme),
   }
@@ -52,10 +52,16 @@ function createTitleOptions(options) {
   }
 }
 
-function createLegendOptions() {
+function createLegendOptions(options) {
   return {
-    position: "top",
-    align: "center",
+    display: options.legend,
+    position: options.legend_position,
+    align: options.legend_align,
+    labels: {
+      boxWidth: 16,
+      boxHeight: 8,
+      padding: 8,
+    },
     onHover: (event, legendItem, legend) => {
       if (legendItem) {
         event.native.target.style.cursor = "pointer"
