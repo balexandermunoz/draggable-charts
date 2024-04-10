@@ -54,7 +54,7 @@ function createTitleOptions(options) {
 
 function createLegendOptions() {
   return {
-    position: "right",
+    position: "top",
     align: "center",
     onHover: (event, legendItem, legend) => {
       if (legendItem) {
