@@ -77,7 +77,7 @@ def draggable_line_chart(
             "y_grid": True
         }
     if isinstance(data, pd.Series):
-        if data.name is None:
+        if not data.name:
             data.name = "data"
         dict_data = {data.name: data.to_dict()}
     elif isinstance(data, pd.DataFrame):
@@ -86,9 +86,14 @@ def draggable_line_chart(
         dict_data = data.to_dict()
     else:
         raise ValueError("The data must be a pandas Series or DataFrame.")
-        
-    new_data = _draggable_line_chart(data=dict_data, options=options, key=key, default=data)
-    if isinstance(data, pd.Series):
-        return pd.Series(new_data[data.name])
+
+    new_data = _draggable_line_chart(
+        data=dict_data, options=options, key=key, default=data)
+    if isinstance(data, pd.Series) and isinstance(new_data, pd.Series):
+        return pd.Series(new_data)
+    elif isinstance(data, pd.Series):
+        new_series = pd.Series(new_data[data.name])
+        new_series.name = data.name
+        return new_series
     elif isinstance(data, pd.DataFrame):
         return pd.DataFrame(new_data)
