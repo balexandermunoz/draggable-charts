@@ -38,6 +38,11 @@ pip install draggable-line-chart
 ## Example
 
 ```python
+import pandas as pd
+import streamlit as st
+
+from draggable_line_chart import draggable_line_chart
+
 st.header("Draggable Plot 1!")
 initial_data = pd.DataFrame({
     "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
@@ -62,4 +67,5 @@ st.header("Draggable Plot 2!")
 series_data = pd.Series([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])
 new_series_data = draggable_line_chart(data=series_data)
 new_series_data
+
 ```
