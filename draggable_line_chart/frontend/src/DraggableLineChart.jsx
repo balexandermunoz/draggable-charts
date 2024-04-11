@@ -29,7 +29,7 @@ class DraggableLineChart extends StreamlitComponentBase {
     Streamlit.setFrameHeight()
     if (this.props.args !== prevProps.args) {
       this.setState({
-      originalData: this.props.args.data,
+        originalData: this.props.args.data,
         chartData: createChartData(
           this.props.args.data,
           this.props.args.options
@@ -40,8 +40,8 @@ class DraggableLineChart extends StreamlitComponentBase {
   }
 
   togglePan(enabled) {
-    this.chartRef.current.options.plugins.zoom.pan.enabled = enabled;
-    this.chartRef.current.update('none');
+    this.chartRef.current.options.plugins.zoom.pan.enabled = enabled
+    this.chartRef.current.update("none")
   }
 
   downHandler = (event) => {
@@ -57,9 +57,13 @@ class DraggableLineChart extends StreamlitComponentBase {
   upHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
-      const datasetLabel = chart.data.datasets[this.state.activePoint.datasetIndex].label
+      const datasetLabel =
+        chart.data.datasets[this.state.activePoint.datasetIndex].label
       const xLabel = this.state.chartData.labels[this.state.activePoint.index]
-      const yValue = chart.data.datasets[this.state.activePoint.datasetIndex].data[this.state.activePoint.index]
+      const yValue =
+        chart.data.datasets[this.state.activePoint.datasetIndex].data[
+          this.state.activePoint.index
+        ]
 
       this.state.originalData[datasetLabel][xLabel] = yValue
       this.setState({ activePoint: null })
@@ -84,7 +88,7 @@ class DraggableLineChart extends StreamlitComponentBase {
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
       ] = yValue
-      chart.update('none')
+      chart.update("none")
     }
   }
 
