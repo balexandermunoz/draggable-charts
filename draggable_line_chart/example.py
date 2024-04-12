@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 import streamlit as st
 
@@ -6,7 +7,7 @@ from draggable_line_chart import draggable_line_chart
 st.header("Draggable Plot 1!")
 initial_data = pd.DataFrame({
     "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-    "Col2": [1, 4, 9, 16, 25, 36, 49, 64, 81, 200],
+    "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
     "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -50, -100]
 })
 
@@ -19,7 +20,7 @@ plot_options = {
     "y_grid": True,
     'legend_position': 'right',
     'legend_align': 'start',
-    'tension': 0 # default: 0.3
+    'tension': 0  # default: 0.3
 }
 new_data = draggable_line_chart(data=initial_data, options=plot_options)
 new_data
