@@ -57,6 +57,7 @@ def draggable_line_chart(
         - 'legend': A boolean indicating whether to display the legend. If not provided, the legend will be displayed by default.
         - 'legend_position': The position of the legend. It can be 'top', 'left', 'bottom', or 'right'.
         - 'legend_align': The alignment of the legend. It can be 'start', 'center', or 'end'.
+        - 'tension': The lines tension. 0 gives straight lines, 0.5 gives soft lines. Default is 0.3.
         If not provided, default options will be used.
     key : str, optional
         An optional string to use as the unique key for the widget. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.

@@ -1,12 +1,17 @@
 export function createChartData(data, options) {
+  console.log(options)
+  const tension =
+    options.tension !== undefined
+      ? Math.min(Math.max(options.tension, 0), 0.4)
+      : 0.3
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = Object.values(colData)
     return {
       data,
       label: colName,
       fill: false,
-      lineTension: 0.3,
-      cubicInterpolationMode: "monotone",
+      lineTension: tension,
+      cubicInterpolationMode: "default",
     }
   })
 

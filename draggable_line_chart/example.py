@@ -19,6 +19,7 @@ plot_options = {
     "y_grid": True,
     'legend_position': 'right',
     'legend_align': 'start',
+    'tension': 0 # default: 0.3
 }
 new_data = draggable_line_chart(data=initial_data, options=plot_options)
 new_data
