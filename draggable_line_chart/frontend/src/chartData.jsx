@@ -3,6 +3,7 @@ export function createChartData(data, options) {
     options && options.tension !== undefined
       ? Math.min(Math.max(options.tension, 0), 0.4)
       : 0.3
+  const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = Object.values(colData)
     return {
@@ -11,6 +12,7 @@ export function createChartData(data, options) {
       fill: false,
       lineTension: tension,
       cubicInterpolationMode: "default",
+      spanGaps: fillGaps,
     }
   })
 

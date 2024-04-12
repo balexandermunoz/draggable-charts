@@ -44,6 +44,7 @@ def draggable_line_chart(
         - 'legend_position': The position of the legend. It can be 'top', 'left', 'bottom', or 'right'.
         - 'legend_align': The alignment of the legend. It can be 'start', 'center', or 'end'.
         - 'tension': The tension of the lines. 0 gives straight lines, 0.5 gives smooth lines. Default is 0.3.
+        - 'fill_gaps': A Boolean that indicates whether NaN values are filled in the lines. If False, lines will be broken at NaN values. Default is False.
         If not provided, default options will be used.
     key : str, optional
         An optional string to use as the unique key for the widget. If this is None, and the component's arguments are changed, the component will be re-mounted in the Streamlit frontend and lose its current state.
@@ -61,7 +62,8 @@ def draggable_line_chart(
     if not options:
         options = {
             "x_grid": True,
-            "y_grid": True
+            "y_grid": True,
+            "tension": 0.3
         }
     if isinstance(data, pd.Series):
         if not data.name:
