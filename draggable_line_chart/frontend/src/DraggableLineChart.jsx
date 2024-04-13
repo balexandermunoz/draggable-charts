@@ -49,6 +49,15 @@ class DraggableLineChart extends StreamlitComponentBase {
       intersect: false,
     })
     if (points.length > 0) {
+      const datasetLabel =
+        this.chartRef.current.data.datasets[points[0].datasetIndex].label
+      if (
+        this.props.args.options.fixed_lines &&
+        this.props.args.options.fixed_lines.includes(datasetLabel)
+      ) {
+        // This line is fixed, so don't allow it to be moved
+        return
+      }
       this.setState({ activePoint: points[0] })
       this.togglePan(false)
     }

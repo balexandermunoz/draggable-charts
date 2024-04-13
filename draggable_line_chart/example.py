@@ -22,6 +22,7 @@ plot_options = {
     'legend_align': 'start',  # default: 'center'
     'tension': 0,  # default: 0.3
     'fill_gaps': True,  # default: False
+    'fixed_lines': ["Col3"],  # default: []
 }
 new_data = draggable_line_chart(data=initial_data, options=plot_options)
 new_data
