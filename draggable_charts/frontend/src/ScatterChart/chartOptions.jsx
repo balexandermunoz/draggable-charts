@@ -34,7 +34,7 @@ function createZoomOptions() {
       wheel: {
         enabled: true,
       },
-      mode: "xy",
+      mode: "y",
     },
     pan: {
       enabled: true,
@@ -74,28 +74,45 @@ function createLegendOptions(options) {
 }
 
 function createScalesOptions(options, theme) {
+  const xScaleOptions = {
+    display: true,
+    type: options.x_type,
+    title: {
+      display: true,
+      text: options.x_label,
+    },
+    grid: {
+      display: options.x_grid,
+      color: theme.fadedText05,
+    },
+  }
+
+  if (options.x_labels) {
+    xScaleOptions.min = options.x_labels[0]
+    xScaleOptions.max = options.x_labels[options.x_labels.length - 1]
+  }
+
+  const yScaleOptions = {
+    display: true,
+    type: options.y_type,
+    title: {
+      display: true,
+      text: options.y_label,
+    },
+    grid: {
+      display: options.y_grid,
+      color: theme.fadedText05,
+    },
+  }
+
+  if (options.y_labels) {
+    yScaleOptions.labels = options.y_labels
+    yScaleOptions.min = options.y_labels[0]
+    yScaleOptions.max = options.y_labels[options.y_labels.length - 1]
+  }
+
   return {
-    x: {
-      display: true,
-      title: {
-        display: true,
-        text: options.x_label,
-      },
-      grid: {
-        display: options.x_grid,
-        color: theme.fadedText05,
-      },
-    },
-    y: {
-      display: true,
-      title: {
-        display: true,
-        text: options.y_label,
-      },
-      grid: {
-        display: options.y_grid,
-        color: theme.fadedText05,
-      },
-    },
+    x: xScaleOptions,
+    y: yScaleOptions,
   }
 }

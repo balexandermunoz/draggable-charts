@@ -1,4 +1,5 @@
 export function createChartData(data, options) {
+  const xLabels = options && options.x_labels ? options.x_labels : []
   const tension =
     options && options.tension !== undefined
       ? Math.min(Math.max(options.tension, 0), 0.4)
@@ -25,6 +26,7 @@ export function createChartData(data, options) {
   }
 
   return {
+    labels: xLabels,
     datasets: datasets,
   }
 }

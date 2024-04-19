@@ -60,42 +60,82 @@ class ScatterChart extends StreamlitComponentBase {
     }
   }
 
-  moveHandler = (event) => {
-    if (this.state.activePoint) {
-      const chart = this.chartRef.current
-      const position = getRelativePosition(event, this.chartRef.current)
-      const chartArea = chart.chartArea
-
-      // Y movement:
-      const yAxis = chart.scales.y
-      const yValue = this.map(
+  calculateNewYValue = (position, chartArea, yAxis) => {
+    if (this.props.args.options.y_type === "category") {
+      const categories = yAxis.getLabels()
+      const categoryIndex = Math.round(
+        this.map(
+          position.y,
+          chartArea.top,
+          chartArea.bottom,
+          0,
+          categories.length - 1
+        )
+      )
+      return categories[categoryIndex]
+    } else {
+      return this.map(
         position.y,
         chartArea.bottom,
         chartArea.top,
         yAxis.min,
         yAxis.max
       )
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
-      ].y = yValue
+    }
+  }
 
-      // X movement:
-      const xAxis = chart.scales.x
-      const xValue = this.map(
+  calculateNewXValue = (position, chartArea, xAxis) => {
+    if (this.props.args.options.x_type === "category") {
+      const categories = xAxis.getLabels()
+      const categoryIndex = Math.round(
+        this.map(
+          position.x,
+          chartArea.left,
+          chartArea.right,
+          0,
+          categories.length - 1
+        )
+      )
+      return categories[categoryIndex]
+    } else {
+      return this.map(
         position.x,
         chartArea.left,
         chartArea.right,
         xAxis.min,
         xAxis.max
       )
+    }
+  }
+
+  moveHandler = (event) => {
+    if (this.state.activePoint) {
+      const chart = this.chartRef.current
+      const position = getRelativePosition(event, this.chartRef.current)
+      const chartArea = chart.chartArea
+
+      const newYValue = this.calculateNewYValue(
+        position,
+        chartArea,
+        chart.scales.y
+      )
+
+      const newXValue = this.calculateNewXValue(
+        position,
+        chartArea,
+        chart.scales.x
+      )
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
-      ].x = xValue
+      ].y = newYValue
+
+      chart.data.datasets[this.state.activePoint.datasetIndex].data[
+        this.state.activePoint.index
+      ].x = newXValue
 
       chart.update("none")
     }
   }
-
   upHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
@@ -104,7 +144,7 @@ class ScatterChart extends StreamlitComponentBase {
       const datasetLabel = chart.data.datasets[datasetIndex].label
       const xValue = chart.data.datasets[datasetIndex].data[pointIndex].x
       const yValue = chart.data.datasets[datasetIndex].data[pointIndex].y
-      
+
       this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
       this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
       Streamlit.setComponentValue(this.state.originalData)
