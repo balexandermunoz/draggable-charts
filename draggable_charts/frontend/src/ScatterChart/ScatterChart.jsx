@@ -107,9 +107,10 @@ class ScatterChart extends StreamlitComponentBase {
       
       this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
       this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
+      Streamlit.setComponentValue(this.state.originalData)
+
       this.setState({ activePoint: null })
       this.togglePan(true)
-      Streamlit.setComponentValue(this.state.originalData)
     }
   }
 

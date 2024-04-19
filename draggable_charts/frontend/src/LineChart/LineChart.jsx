@@ -82,13 +82,11 @@ class LineChart extends StreamlitComponentBase {
   upHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
-      const datasetLabel =
-        chart.data.datasets[this.state.activePoint.datasetIndex].label
-      const xLabel = this.state.chartData.labels[this.state.activePoint.index]
-      const yValue =
-        chart.data.datasets[this.state.activePoint.datasetIndex].data[
-          this.state.activePoint.index
-        ]
+      const datasetIndex = this.state.activePoint.datasetIndex
+      const pointIndex = this.state.activePoint.index
+      const datasetLabel = chart.data.datasets[datasetIndex].label
+      const xLabel = this.state.chartData.labels[pointIndex]
+      const yValue = chart.data.datasets[datasetIndex].data[pointIndex]
 
       this.state.originalData[datasetLabel][xLabel] = yValue
       this.setState({ activePoint: null })
