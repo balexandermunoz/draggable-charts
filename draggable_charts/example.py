@@ -4,7 +4,7 @@ import streamlit as st
 
 from draggable_charts import line_chart, scatter_chart
 
-st.header("Draggable Plot with options!")
+st.header("Line chart with options!")
 initial_data = pd.DataFrame({
     "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
@@ -27,12 +27,12 @@ plot_options = {
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
 new_data
 
-st.header("Draggable Plot with no options!")
+st.header("Line chart with series and all default")
 series_data = pd.Series([1, 2, 3, 4, 5, np.nan, 7, 8, 9, 10])
 new_series_data = line_chart(data=series_data)
 new_series_data
 
-
+st.header("Scatter chart")
 scatter_data = {
     "trace 1": {"x": [1, 2, 3, 4, 5], "y": [1, 4, 9, 16, 25]},
     "trace 2": {"x": [1, 2, 3, 4, 5], "y": [1, 8, 27, 64, 125]},
