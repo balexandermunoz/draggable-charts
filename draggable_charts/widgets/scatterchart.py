@@ -7,6 +7,7 @@ DEFAULT_OPTIONS = {
     "x_grid": True,
     "y_grid": True,
     "tension": 0.3,
+    "line": False,
 }
 
 def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:

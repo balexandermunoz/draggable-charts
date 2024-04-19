@@ -3,8 +3,8 @@ import pandas as pd
 import streamlit as st
 
 from draggable_charts import line_chart, scatter_chart
-
-st.subheader("Line chart with options!")
+st.header("Line charts")
+st.subheader("Custom")
 initial_data = pd.DataFrame({
     "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
@@ -27,12 +27,13 @@ plot_options = {
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
 new_data
 
-st.header("Line chart with series and all default")
+st.subheader("Default")
 series_data = pd.Series([1, 2, 3, 4, 5, np.nan, 7, 8, 9, 10])
 new_series_data = line_chart(data=series_data)
 new_series_data
 
-st.subheader("Scatter chart")
+st.header("Scatter chart")
+st.subheader("Numerical dots")
 x_num = [1, 2, 3, 4, 5]
 y = ["R", "G", "H"]
 scatter_data = {
@@ -41,8 +42,9 @@ scatter_data = {
     "trace 3": {"x": x_num, "y": [1, 16, 81, 256, 625]},
 }
 new_scatter_data = scatter_chart(data=scatter_data)
-#new_scatter_data
+# new_scatter_data
 
+st.subheader("Categorical")
 x_cat = ["A", "B", "C", "D", "E"]
 y_cat = ["R", "G", "H", "I", "J"]
 scatter_data = {
@@ -50,14 +52,22 @@ scatter_data = {
     "trace 2": {"x": x_cat, "y": ["R", "G", "H", "I", "J"]},
     "trace 3": {"x": x_cat, "y": ["G", "G", "G", "G", "G"]},
 }
-new_scatter_data = scatter_chart(data=scatter_data, options={"x_labels": x_cat, "y_labels": y_cat})
-#new_scatter_data
+new_scatter_data = scatter_chart(
+    data=scatter_data,
+    options={"x_labels": x_cat, "y_labels": y_cat, "show_line": True}
+)
+# new_scatter_data
 
-
+st.subheader("Num + Cat")
 scatter_data = {
     "trace 1": {"x": x_cat, "y": [1, 4, 9, 16, 25]},
     "trace 2": {"x": x_cat, "y": [1, 8, 27, 64, 125]},
     "trace 3": {"x": x_cat, "y": [1, 16, 81, 256, 625]},
 }
-new_scatter_data = scatter_chart(data=scatter_data, options={"x_labels": x_cat})
-#new_scatter_data
+new_scatter_data = scatter_chart(
+    data=scatter_data,
+    options={"x_labels": x_cat, "show_line": True, "tension": 0}
+)
+show_data = st.button("Show data")
+if show_data:
+    new_scatter_data

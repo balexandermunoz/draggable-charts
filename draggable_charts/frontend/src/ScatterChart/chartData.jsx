@@ -1,5 +1,6 @@
 export function createChartData(data, options) {
   const xLabels = options && options.x_labels ? options.x_labels : []
+  const showLine = options && options.show_line ? options.show_line : false
   const tension =
     options && options.tension !== undefined
       ? Math.min(Math.max(options.tension, 0), 0.4)
@@ -8,7 +9,7 @@ export function createChartData(data, options) {
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
     return {
-      showLine: true,
+      showLine: showLine,
       data: data,
       label: colName,
       fill: false,
