@@ -3,17 +3,13 @@ import { getRelativePosition } from "chart.js/helpers"
 import zoomPlugin from "chartjs-plugin-zoom"
 import React from "react"
 import { Line, getElementAtEvent } from "react-chartjs-2"
-import {
-  Streamlit,
-  StreamlitComponentBase,
-  withStreamlitConnection,
-} from "streamlit-component-lib"
+import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "./chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
 
-class DraggableLineChart extends StreamlitComponentBase {
+class LineChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
@@ -119,4 +115,4 @@ class DraggableLineChart extends StreamlitComponentBase {
   }
 }
 
-export default withStreamlitConnection(DraggableLineChart)
+export default LineChart

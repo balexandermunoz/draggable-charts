@@ -1,7 +1,7 @@
 export function createOptions(options, theme) {
   return {
     responsive: true,
-    indexAxis: 'x',
+    indexAxis: "x",
     animation: {
       duration: 0,
     },

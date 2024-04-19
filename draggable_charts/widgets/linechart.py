@@ -1,25 +1,16 @@
-import os
 from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
-import streamlit.components.v1 as components
+from utils import component, get_func_name
 
-_RELEASE = True
+DEFAULT_OPTIONS = {
+    "x_grid": True,
+    "y_grid": True,
+    "tension": 0.3
+}
 
-if not _RELEASE:
-    _draggable_line_chart = components.declare_component(
-        "draggable_line_chart",
-        url="http://localhost:3001",
-    )
-else:
-    parent_dir = os.path.dirname(os.path.abspath(__file__))
-    build_dir = os.path.join(parent_dir, "frontend/build")
-    _draggable_line_chart = components.declare_component(
-        "draggable_line_chart", path=build_dir)
-
-
-def draggable_line_chart(
+def line_chart(
     data: Union[pd.DataFrame, pd.Series],
     options: Dict[str, Any] = {},
     key: str = None
@@ -61,27 +52,43 @@ def draggable_line_chart(
         If the data is not a pandas Series, DataFrame, or a dictionary, or if the DataFrame does not have only numeric columns.
     """
     if not options:
-        options = {
-            "x_grid": True,
-            "y_grid": True,
-            "tension": 0.3
-        }
+        options = DEFAULT_OPTIONS.copy()
+    validate_data(data)
+    dict_data = transform_data(data)
+    new_data = component(
+        id=get_func_name(),
+        kw={"data": dict_data, "options": options},
+        default=data,
+        key=key
+    )
+    new_df = postprocess_data(data, new_data)
+    return new_df
+
+def validate_data(data):
     if isinstance(data, pd.Series):
-        if not data.name:
-            data.name = "data"
-        dict_data = {data.name: data.replace({np.nan: None}).to_dict()}
+        return
     elif isinstance(data, pd.DataFrame):
         non_numeric_columns = data.select_dtypes(exclude='number').columns
         if len(non_numeric_columns) > 0:
             raise ValueError(
-                f"The DataFrame contains non-numeric columns: {list(non_numeric_columns)}"
+                f"The DataFrame contains non-numeric columns: {list(non_numeric_columns)}. "
+                "Expected a DataFrame with only numeric columns."
             )
-        dict_data = data.replace({np.nan: None}).to_dict()
     else:
-        raise ValueError("The data must be a pandas Series or DataFrame.")
-
-    new_data = _draggable_line_chart(
-        data=dict_data, options=options, key=key, default=data)
+        raise ValueError(
+            f"Invalid data type: {type(data).__name__}. "
+            "Expected a pandas Series or DataFrame."
+        )
+        
+def transform_data(data) -> dict:
+    if isinstance(data, pd.Series):
+        if not data.name:
+            data.name = "data"
+        return {data.name: data.replace({np.nan: None}).to_dict()}
+    elif isinstance(data, pd.DataFrame):
+        return data.replace({np.nan: None}).to_dict()
+    
+def postprocess_data(data, new_data) -> pd.DataFrame:
     if isinstance(data, pd.Series) and isinstance(new_data, pd.Series):
         return pd.Series(new_data)
     elif isinstance(data, pd.Series):
