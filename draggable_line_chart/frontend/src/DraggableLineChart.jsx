@@ -63,24 +63,6 @@ class DraggableLineChart extends StreamlitComponentBase {
     }
   }
 
-  upHandler = (event) => {
-    if (this.state.activePoint) {
-      const chart = this.chartRef.current
-      const datasetLabel =
-        chart.data.datasets[this.state.activePoint.datasetIndex].label
-      const xLabel = this.state.chartData.labels[this.state.activePoint.index]
-      const yValue =
-        chart.data.datasets[this.state.activePoint.datasetIndex].data[
-          this.state.activePoint.index
-        ]
-
-      this.state.originalData[datasetLabel][xLabel] = yValue
-      this.setState({ activePoint: null })
-      this.togglePan(true)
-      Streamlit.setComponentValue(this.state.originalData)
-    }
-  }
-
   moveHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
@@ -98,6 +80,24 @@ class DraggableLineChart extends StreamlitComponentBase {
         this.state.activePoint.index
       ] = yValue
       chart.update("none")
+    }
+  }
+
+  upHandler = (event) => {
+    if (this.state.activePoint) {
+      const chart = this.chartRef.current
+      const datasetLabel =
+        chart.data.datasets[this.state.activePoint.datasetIndex].label
+      const xLabel = this.state.chartData.labels[this.state.activePoint.index]
+      const yValue =
+        chart.data.datasets[this.state.activePoint.datasetIndex].data[
+          this.state.activePoint.index
+        ]
+
+      this.state.originalData[datasetLabel][xLabel] = yValue
+      this.setState({ activePoint: null })
+      this.togglePan(true)
+      Streamlit.setComponentValue(this.state.originalData)
     }
   }
 
