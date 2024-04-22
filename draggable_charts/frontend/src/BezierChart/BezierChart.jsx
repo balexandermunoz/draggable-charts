@@ -27,6 +27,8 @@ class BezierChart extends StreamlitComponentBase {
       ),
       options: createOptions(props.args.options, props.theme),
     }
+    // Return the initial Bezier data:
+    this.sendBezierData()
   }
 
   componentDidUpdate(prevProps) {
@@ -45,6 +47,11 @@ class BezierChart extends StreamlitComponentBase {
         options: createOptions(this.props.args.options, this.props.theme),
       })
     }
+  }
+
+  sendBezierData() {
+    const newBezierData = this.convertBezierData(this.state.bezierData.datasets)
+    Streamlit.setComponentValue(newBezierData)
   }
 
   togglePan(enabled) {
@@ -88,30 +95,30 @@ class BezierChart extends StreamlitComponentBase {
 
   moveHandler = (event) => {
     if (this.state.activePoint) {
-      const chart = this.chartRef.current;
-      const position = getRelativePosition(event, this.chartRef.current);
-      const chartArea = chart.chartArea;
-  
+      const chart = this.chartRef.current
+      const position = getRelativePosition(event, this.chartRef.current)
+      const chartArea = chart.chartArea
+
       const newYValue = this.calculateNewYValue(
         position,
         chartArea,
         chart.scales.y
-      );
-  
+      )
+
       const newXValue = this.calculateNewXValue(
         position,
         chartArea,
         chart.scales.x
-      );
-  
+      )
+
       // Update control point position
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
-      ].y = newYValue;
-  
+      ].y = newYValue
+
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
-      ].x = newXValue;
+      ].x = newXValue
 
       // Set new values in originalData
       const datasetIndex = this.state.activePoint.datasetIndex
@@ -127,20 +134,43 @@ class BezierChart extends StreamlitComponentBase {
       const bezierData = createBezierData(
         this.state.originalData,
         this.props.args.options.colors
-      );
+      )
       // Update state
-      this.setState({ bezierData });
-      chart.update("none");
+      this.setState({ bezierData })
+      chart.update("none")
     }
-  };
+  }
 
   upHandler = (event) => {
     if (this.state.activePoint) {
-      Streamlit.setComponentValue(this.state.originalData)
-
+      this.sendBezierData()
       this.setState({ activePoint: null })
       this.togglePan(true)
     }
+  }
+
+  convertBezierData(bezierData) {
+    const result = {}
+    bezierData.forEach((dataset) => {
+      const trace = dataset.label.replace(" (bezier)", "")
+      result[trace] = {
+        x: [],
+        y: [],
+        t: [],
+      }
+      dataset.data.forEach((point) => {
+        const { x, y, t } = point
+        const index = result[trace].x.findIndex(
+          (val, i) => val === x && result[trace].y[i] === y
+        )
+        if (index === -1) {
+          result[trace].x.push(x)
+          result[trace].y.push(y)
+          result[trace].t.push(t)
+        }
+      })
+    })
+    return result
   }
 
   map = (value, start1, stop1, start2, stop2) => {

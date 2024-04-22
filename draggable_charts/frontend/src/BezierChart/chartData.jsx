@@ -35,17 +35,15 @@ export function createBezierData(data, colors) {
     const points = traceData.x.map((x, j) => ({
       x: x,
       y: traceData.y[j],
-    }));
+    }))
 
-    const bezierSegments = [];
+    const bezierSegments = []
     for (let i = 0; i < points.length - 2; i += 2) {
-      const bezierPoints = points.slice(i, i + 3);
-      console.log(points, bezierPoints)
-      const bezier = new Bezier(bezierPoints);
-      const lut = bezier.getLUT(10);
-      bezierSegments.push(...lut);
+      const bezierPoints = points.slice(i, i + 3)
+      const bezier = new Bezier(bezierPoints)
+      const lut = bezier.getLUT(10)
+      bezierSegments.push(...lut)
     }
-    console.log(bezierSegments)
     return {
       label: trace + " (bezier)",
       data: bezierSegments,
@@ -53,8 +51,8 @@ export function createBezierData(data, colors) {
       showLine: true,
       tension: 0.3,
       pointRadius: 4,
-    };
-  });
+    }
+  })
 
-  return { datasets };
+  return { datasets }
 }
