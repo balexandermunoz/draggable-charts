@@ -93,10 +93,29 @@ class BezierChart extends StreamlitComponentBase {
     )
   }
 
+  updateControlPointPosition = (chart, activePoint, newXValue, newYValue) => {
+    const datasetIndex = activePoint.datasetIndex
+    const pointIndex = activePoint.index
+    chart.data.datasets[datasetIndex].data[pointIndex].x = newXValue
+    chart.data.datasets[datasetIndex].data[pointIndex].y = newYValue
+  }
+
+  updateOriginalData = (chart, activePoint) => {
+    const datasetIndex = activePoint.datasetIndex
+    const pointIndex = activePoint.index
+    const datasetLabel = chart.data.datasets[datasetIndex].label
+    const xValue = chart.data.datasets[datasetIndex].data[pointIndex].x
+    const yValue = chart.data.datasets[datasetIndex].data[pointIndex].y
+
+    this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
+    this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
+  }
+
   moveHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
-      const position = getRelativePosition(event, this.chartRef.current)
+      const activePoint = this.state.activePoint
+      const position = getRelativePosition(event, chart)
       const chartArea = chart.chartArea
 
       const newYValue = this.calculateNewYValue(
@@ -112,23 +131,9 @@ class BezierChart extends StreamlitComponentBase {
       )
 
       // Update control point position
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
-      ].y = newYValue
-
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
-      ].x = newXValue
-
+      this.updateControlPointPosition(chart, activePoint, newXValue, newYValue)
       // Set new values in originalData
-      const datasetIndex = this.state.activePoint.datasetIndex
-      const pointIndex = this.state.activePoint.index
-      const datasetLabel = chart.data.datasets[datasetIndex].label
-      const xValue = chart.data.datasets[datasetIndex].data[pointIndex].x
-      const yValue = chart.data.datasets[datasetIndex].data[pointIndex].y
-
-      this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
-      this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
+      this.updateOriginalData(chart, activePoint)
 
       // Recalculate Bezier data
       const bezierData = createBezierData(
