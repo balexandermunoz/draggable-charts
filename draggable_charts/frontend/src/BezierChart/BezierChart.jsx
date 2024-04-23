@@ -28,7 +28,7 @@ class BezierChart extends StreamlitComponentBase {
       options: createOptions(props.args.options, props.theme),
     }
     // Return the initial Bezier data:
-    this.sendBezierData()
+    // this.sendBezierData()
   }
 
   componentDidUpdate(prevProps) {
@@ -161,17 +161,15 @@ class BezierChart extends StreamlitComponentBase {
       result[trace] = {
         x: [],
         y: [],
-        t: [],
       }
       dataset.data.forEach((point) => {
-        const { x, y, t } = point
+        const { x, y } = point
         const index = result[trace].x.findIndex(
           (val, i) => val === x && result[trace].y[i] === y
         )
         if (index === -1) {
           result[trace].x.push(x)
           result[trace].y.push(y)
-          result[trace].t.push(t)
         }
       })
     })
