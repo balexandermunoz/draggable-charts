@@ -9,7 +9,7 @@ export function createControlData(data, options) {
       isControlPoint: true,
       label: colName,
       fill: false,
-      lineTension: 0,
+      tension: 0,
       cubicInterpolationMode: "default",
       spanGaps: fillGaps,
       showLine: true,
@@ -18,19 +18,12 @@ export function createControlData(data, options) {
     }
   })
 
-  if (options && options.colors) {
-    datasets.forEach((dataset, index) => {
-      dataset.backgroundColor = options.colors[index]
-      dataset.borderColor = options.colors[index]
-    })
-  }
-
   return {
     datasets: datasets,
   }
 }
 
-export function createBezierData(data, colors) {
+export function createBezierData(data, options) {
   const datasets = Object.entries(data).map(([trace, traceData], i) => {
     const points = traceData.x.map((x, j) => ({
       x: x,
@@ -50,9 +43,16 @@ export function createBezierData(data, colors) {
       isControlPoint: false,
       showLine: true,
       tension: 0.3,
-      pointRadius: 4,
+      pointRadius: 0,
     }
   })
+
+  if (options && options.colors) {
+    datasets.forEach((dataset, index) => {
+      dataset.backgroundColor = options.colors[index % options.colors.length]
+      dataset.borderColor = options.colors[index % options.colors.length]
+    })
+  }
 
   return { datasets }
 }
