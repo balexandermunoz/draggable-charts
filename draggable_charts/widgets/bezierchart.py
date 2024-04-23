@@ -59,7 +59,7 @@ def bezier_chart(
     options['y_type'] = _get_scale_type(data, 'y')
     _validate_scatter_data(data, options)
     data = add_control_points(data, t)
-    return component(id=get_func_name(), kw=locals(), default={}, key=key)
+    return component(id=get_func_name(), kw=locals(), default=data, key=key)
 
 
 def add_control_points(data: dict, t: float = 0.5) -> dict:
