@@ -43,10 +43,49 @@ def _validate_scatter_data(data: dict, options: dict) -> None:
                 f"'x' and 'y' must be lists of the same length. Got: x={trace_data['x']}, y={trace_data['y']}")
 
 
-def scatter_chart(data: dict, options: dict = None, key: str = None) -> dict:
+def bezier_chart(data: dict, options: dict = None, key: str = None) -> dict:
     if not options:
         options = DEFAULT_OPTIONS.copy()
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     _validate_scatter_data(data, options)
-    return component(id=get_func_name(), kw=locals(), default=data, key=key)
+    data = add_control_points(data)
+    return component(id=get_func_name(), kw=locals(), default={}, key=key)
+
+def add_control_points(data: dict, t: float = 0.75) -> dict:
+    for trace_data in data.values():
+        trace_len = len(trace_data['x'])
+        if trace_len < 2:
+            continue
+        
+        # First point:
+        x_0 = trace_data['x'][0]
+        y_0 = trace_data['y'][0]
+        
+        x_1 = trace_data['x'][1]
+        y_1 = trace_data['y'][1]
+        
+        # First control point:
+        x_c = x_0 + (x_1 - x_0)/2
+        y_c = y_0 + t * (y_1 - y_0)
+        
+        control_points = [(x_c, y_c)]
+        for i in range(1, trace_len - 1, 1):
+            x_c, y_c = control_points[-1][0], control_points[-1][1]
+            
+            x_0, y_0 = trace_data['x'][i], trace_data['y'][i]
+            x_1, y_1 = trace_data['x'][i + 1], trace_data['y'][i + 1]
+            
+            m = (y_0 - y_c) / (x_0 - x_c)
+            b = y_0 - m * x_0
+            
+            x_cn = x_0 + (x_1 - x_0) / 2
+            y_cn =  m * x_cn + b
+            
+            control_points.append((x_cn, y_cn))
+        
+        # Add control points into data:
+        for i, (x_c, y_c) in enumerate(control_points):
+            trace_data['x'].insert(2 * i + 1, x_c)
+            trace_data['y'].insert(2 * i + 1, y_c)
+    return data
