@@ -43,16 +43,16 @@ def _validate_scatter_data(data: dict, options: dict) -> None:
                 f"'x' and 'y' must be lists of the same length. Got: x={trace_data['x']}, y={trace_data['y']}")
 
 
-def bezier_chart(data: dict, options: dict = None, key: str = None) -> dict:
+def bezier_chart(data: dict, t: float = 0.5, options: dict = None, key: str = None) -> dict:
     if not options:
         options = DEFAULT_OPTIONS.copy()
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     _validate_scatter_data(data, options)
-    data = add_control_points(data)
+    data = add_control_points(data, t)
     return component(id=get_func_name(), kw=locals(), default={}, key=key)
 
-def add_control_points(data: dict, t: float = 0.75) -> dict:
+def add_control_points(data: dict, t: float = 0.5) -> dict:
     for trace_data in data.values():
         trace_len = len(trace_data['x'])
         if trace_len < 2:
