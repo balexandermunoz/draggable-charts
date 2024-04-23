@@ -7,13 +7,13 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="draggable-line-chart",
-    version="0.3.6",
+    version="1.0.0",
     author="Brayan Munoz",
     author_email="balexander.munoz@udea.edu.co",
     description="A Streamlit component that displays a line chart with draggable points. Users can click and drag points on the chart to adjust their values. The updated data of the chart is returned.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/balexandermunoz/draggable-charts",
     packages=setuptools.find_packages(),
     include_package_data=True,
     classifiers=[],
