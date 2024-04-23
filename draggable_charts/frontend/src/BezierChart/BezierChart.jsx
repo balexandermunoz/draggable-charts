@@ -23,7 +23,7 @@ class BezierChart extends StreamlitComponentBase {
       ),
       bezierData: createBezierData(
         this.props.args.data,
-        this.props.args.options.colors
+        this.props.args.options
       ),
       options: createOptions(props.args.options, props.theme),
     }
@@ -42,7 +42,7 @@ class BezierChart extends StreamlitComponentBase {
         ),
         bezierData: createBezierData(
           this.props.args.data,
-          this.props.args.options.colors
+          this.props.args.options
         ),
         options: createOptions(this.props.args.options, this.props.theme),
       })
@@ -133,7 +133,7 @@ class BezierChart extends StreamlitComponentBase {
       // Recalculate Bezier data
       const bezierData = createBezierData(
         this.state.originalData,
-        this.props.args.options.colors
+        this.props.args.options
       )
       // Update state
       this.setState({ bezierData })
