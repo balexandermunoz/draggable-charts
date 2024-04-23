@@ -57,35 +57,31 @@ def add_control_points(data: dict, t: float = 0.75) -> dict:
         trace_len = len(trace_data['x'])
         if trace_len < 2:
             continue
-        
-        # First point:
-        x_0 = trace_data['x'][0]
-        y_0 = trace_data['y'][0]
-        
-        x_1 = trace_data['x'][1]
-        y_1 = trace_data['y'][1]
-        
-        # First control point:
-        x_c = x_0 + (x_1 - x_0)/2
-        y_c = y_0 + t * (y_1 - y_0)
-        
-        control_points = [(x_c, y_c)]
-        for i in range(1, trace_len - 1, 1):
-            x_c, y_c = control_points[-1][0], control_points[-1][1]
-            
+
+        control_points = []
+        for i in range(trace_len - 1):
             x_0, y_0 = trace_data['x'][i], trace_data['y'][i]
             x_1, y_1 = trace_data['x'][i + 1], trace_data['y'][i + 1]
-            
-            m = (y_0 - y_c) / (x_0 - x_c)
-            b = y_0 - m * x_0
-            
-            x_cn = x_0 + (x_1 - x_0) / 2
-            y_cn =  m * x_cn + b
-            
-            control_points.append((x_cn, y_cn))
-        
+            if i == 0:
+                x_c, y_c = calculate_first_control_point(x_0, y_0, x_1, y_1, t)
+            else:
+                x_c, y_c = calculate_next_control_point(x_c, y_c, x_0, y_0, x_1, y_1)
+            control_points.append((x_c, y_c))
+
         # Add control points into data:
         for i, (x_c, y_c) in enumerate(control_points):
             trace_data['x'].insert(2 * i + 1, x_c)
             trace_data['y'].insert(2 * i + 1, y_c)
     return data
+
+def calculate_first_control_point(x_0, y_0, x_1, y_1, t):
+    x_c = x_0 + (x_1 - x_0) / 2
+    y_c = y_0 + t * (y_1 - y_0)
+    return x_c, y_c
+
+def calculate_next_control_point(x_c, y_c, x_0, y_0, x_1, y_1):
+    m = (y_0 - y_c) / (x_0 - x_c)
+    b = y_0 - m * x_0
+    x_cn = x_0 + (x_1 - x_0) / 2
+    y_cn = m * x_cn + b
+    return x_cn, y_cn
