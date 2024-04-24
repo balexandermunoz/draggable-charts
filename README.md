@@ -5,7 +5,7 @@ Streamlit component that displays a interactive charts with draggable points. Us
 ## Installation instructions
 
 ```sh
-pip install draggable-line-chart
+pip install draggable-charts
 ```
 
 
