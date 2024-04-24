@@ -1,6 +1,8 @@
-from utils import component, get_func_name
 from typing import Literal
+
 import numpy as np
+
+from ..utils import component, get_func_name
 
 DEFAULT_OPTIONS = {
     "x_grid": True,

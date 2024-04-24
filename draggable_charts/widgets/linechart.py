@@ -2,13 +2,15 @@ from typing import Any, Dict, Union
 
 import numpy as np
 import pandas as pd
-from utils import component, get_func_name
+
+from ..utils import component, get_func_name
 
 DEFAULT_OPTIONS = {
     "x_grid": True,
     "y_grid": True,
     "tension": 0.3
 }
+
 
 def line_chart(
     data: Union[pd.DataFrame, pd.Series],
@@ -64,6 +66,7 @@ def line_chart(
     new_df = postprocess_data(data, new_data)
     return new_df
 
+
 def validate_data(data):
     if isinstance(data, pd.Series):
         return
@@ -79,7 +82,8 @@ def validate_data(data):
             f"Invalid data type: {type(data).__name__}. "
             "Expected a pandas Series or DataFrame."
         )
-        
+
+
 def transform_data(data) -> dict:
     if isinstance(data, pd.Series):
         if not data.name:
@@ -87,7 +91,8 @@ def transform_data(data) -> dict:
         return {data.name: data.replace({np.nan: None}).to_dict()}
     elif isinstance(data, pd.DataFrame):
         return data.replace({np.nan: None}).to_dict()
-    
+
+
 def postprocess_data(data, new_data) -> pd.DataFrame:
     if isinstance(data, pd.Series) and isinstance(new_data, pd.Series):
         return pd.Series(new_data)
