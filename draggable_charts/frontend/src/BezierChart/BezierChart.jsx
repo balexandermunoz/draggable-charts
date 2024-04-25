@@ -5,7 +5,7 @@ import React from "react"
 
 import { Scatter, getElementAtEvent } from "react-chartjs-2"
 import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
-import { createControlData, createBezierData } from "./chartData"
+import { createFixedData, createControlData, createBezierData } from "./chartData"
 import { createOptions } from "./chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
@@ -14,6 +14,10 @@ class BezierChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
+    this.fixedData = createFixedData(
+      this.props.args.data,
+      this.props.args.options
+    )
     this.state = {
       activePoint: null,
       originalData: props.args.data,
@@ -186,6 +190,7 @@ class BezierChart extends StreamlitComponentBase {
         ref={this.chartRef}
         data={{
           datasets: [
+            ...this.fixedData.datasets,
             ...this.state.controlData.datasets,
             ...this.state.bezierData.datasets,
           ],

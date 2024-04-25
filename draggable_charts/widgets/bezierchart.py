@@ -9,6 +9,7 @@ DEFAULT_OPTIONS = {
     "y_grid": True,
     "tension": 0.3,
     "line": False,
+    "fixed_lines": []
 }
 
 
@@ -60,13 +61,14 @@ def bezier_chart(
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     _validate_scatter_data(data, options)
-    data = add_control_points(data, t)
-    return component(id=get_func_name(), kw=locals(), default=data, key=key)
+    data = add_control_points(data, options, t)
+    default_data = {k:v for k, v in data.items() if k not in options["fixed_lines"]}
+    return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
 
 
-def add_control_points(data: dict, t: float = 0.5) -> dict:
-    for trace_data in data.values():
-        if len(trace_data['x']) < 2:
+def add_control_points(data: dict, options: dict, t: float = 0.5) -> dict:
+    for trace_name, trace_data in data.items():
+        if len(trace_data['x']) < 2 or trace_name in options["fixed_lines"]:
             continue
         control_points = calculate_control_points(trace_data, t)
         # Add control points into data:
