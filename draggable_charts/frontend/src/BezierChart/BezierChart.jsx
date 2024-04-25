@@ -5,7 +5,11 @@ import React from "react"
 
 import { Scatter, getElementAtEvent } from "react-chartjs-2"
 import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
-import { createFixedData, createControlData, createBezierData } from "./chartData"
+import {
+  createFixedData,
+  createControlData,
+  createBezierData,
+} from "./chartData"
 import { createOptions } from "./chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
