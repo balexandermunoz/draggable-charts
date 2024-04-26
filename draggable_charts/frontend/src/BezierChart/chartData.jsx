@@ -1,4 +1,5 @@
 import { Bezier } from "bezier-js"
+// import rgba from "color-rgba"
 
 export function createFixedData(data, options) {
   const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
