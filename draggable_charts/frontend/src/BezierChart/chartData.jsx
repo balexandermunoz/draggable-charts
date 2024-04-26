@@ -1,22 +1,25 @@
 import { Bezier } from "bezier-js"
-// import rgba from "color-rgba"
+import rgba from "color-rgba"
 
 export function createFixedData(data, options) {
+  console.log(data)
   const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
   const datasets = Object.entries(data)
     .filter(([colName]) => fixedLines.includes(colName))
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
+      const colorRGBA = rgba(colData.color)
+      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.5)`
       return {
         data: data,
         isControlPoint: false,
         label: colName,
         fill: false,
         tension: 0.3,
-        cubicInterpolationMode: "default",
         spanGaps: false,
         showLine: true,
-        borderWidth: 1,
+        backgroundColor: backgroundColorRGBA,
+        borderColor: colData.color,
       }
     })
 
@@ -32,6 +35,9 @@ export function createControlData(data, options) {
     .filter(([colName]) => !fixedLines.includes(colName))
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
+      const colorRGBA = rgba(colData.color)
+      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.7)`
+      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.5)`
       return {
         data: data,
         isControlPoint: true,
@@ -43,6 +49,8 @@ export function createControlData(data, options) {
         showLine: true,
         borderDash: [5, 5],
         borderWidth: 1,
+        backgroundColor: backgroundColorRGBA,
+        borderColor: borderColorRGBA,
       }
     })
 
@@ -68,6 +76,9 @@ export function createBezierData(data, options) {
         const lut = bezier.getLUT(10)
         bezierSegments.push(...lut)
       }
+      const colorRGBA = rgba(traceData.color)
+      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.7)`
+      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.4)`
       return {
         label: trace + " (bezier)",
         data: bezierSegments,
@@ -75,6 +86,8 @@ export function createBezierData(data, options) {
         showLine: true,
         tension: 0.3,
         pointRadius: 0,
+        backgroundColor: backgroundColorRGBA,
+        borderColor: borderColorRGBA,
       }
     })
 

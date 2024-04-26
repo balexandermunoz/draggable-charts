@@ -9,9 +9,45 @@ DEFAULT_OPTIONS = {
     "y_grid": True,
     "tension": 0.3,
     "line": False,
-    "fixed_lines": []
+    "fixed_lines": [],
+    "colors": [
+        "#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6",
+        "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11",
+        "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#651067"
+    ]
 }
 
+
+def bezier_chart(
+    data: dict,
+    t: float = 0.5,
+    options: dict = None,
+    on_change: Callable = None,
+    args: tuple[Any, ...] = None,
+    kwargs: dict[str, Any] = None,
+    key: str = None
+) -> dict:
+    register(key, on_change, args, kwargs)
+    options = _set_options(data, options)
+    _validate_scatter_data(data, options)
+    data = add_control_points(data, options, t)
+    data = _include_colors(data, options)
+    default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
+    return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
+
+def _include_colors(data: dict, options: dict) -> dict:
+    for i, (trace_name, trace_data) in enumerate(data.items()):
+        trace_data['color'] = options['colors'][i % len(options['colors'])]
+    return data
+
+
+def _set_options(data: dict, options: dict) -> dict:
+    if not options:
+        options = DEFAULT_OPTIONS.copy()
+    options['x_type'] = _get_scale_type(data, 'x')
+    options['y_type'] = _get_scale_type(data, 'y')
+    options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
+    return options
 
 def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
     for trace_data in data.values():
@@ -48,26 +84,6 @@ def _validate_scatter_data(data: dict, options: dict) -> None:
         if len(trace_data['x']) != len(trace_data['y']):
             raise ValueError(
                 f"'x' and 'y' must be lists of the same length. Got: x={trace_data['x']}, y={trace_data['y']}")
-
-
-def bezier_chart(
-    data: dict,
-    t: float = 0.5,
-    options: dict = None,
-    on_change: Callable = None,
-    args: tuple[Any, ...] = None,
-    kwargs: dict[str, Any] = None,
-    key: str = None
-) -> dict:
-    register(key, on_change, args, kwargs)
-    if not options:
-        options = DEFAULT_OPTIONS.copy()
-    options['x_type'] = _get_scale_type(data, 'x')
-    options['y_type'] = _get_scale_type(data, 'y')
-    _validate_scatter_data(data, options)
-    data = add_control_points(data, options, t)
-    default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
-    return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
 
 
 def add_control_points(data: dict, options: dict, t: float = 0.5) -> dict:
