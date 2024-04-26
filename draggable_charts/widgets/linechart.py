@@ -1,9 +1,9 @@
-from typing import Any, Dict, Union
+from typing import Any, Callable, Dict, Union
 
 import numpy as np
 import pandas as pd
 
-from ..utils import component, get_func_name
+from ..utils import component, get_func_name, register
 
 DEFAULT_OPTIONS = {
     "x_grid": True,
@@ -15,6 +15,9 @@ DEFAULT_OPTIONS = {
 def line_chart(
     data: Union[pd.DataFrame, pd.Series],
     options: Dict[str, Any] = {},
+    on_change: Callable = None,
+    args: tuple[Any, ...] = None,
+    kwargs: dict[str, Any] = None,
     key: str = None
 ) -> Union[pd.DataFrame, pd.Series]:
     """
@@ -53,6 +56,7 @@ def line_chart(
     ValueError
         If the data is not a pandas Series, DataFrame, or a dictionary, or if the DataFrame does not have only numeric columns.
     """
+    register(key, on_change, args, kwargs)
     if not options:
         options = DEFAULT_OPTIONS.copy()
     validate_data(data)

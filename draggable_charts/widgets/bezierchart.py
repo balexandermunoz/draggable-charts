@@ -1,8 +1,8 @@
-from typing import Literal
+from typing import Any, Callable, Literal
 
 import numpy as np
 
-from ..utils import component, get_func_name
+from ..utils import component, get_func_name, register
 
 DEFAULT_OPTIONS = {
     "x_grid": True,
@@ -54,15 +54,19 @@ def bezier_chart(
     data: dict,
     t: float = 0.5,
     options: dict = None,
+    on_change: Callable = None,
+    args: tuple[Any, ...] = None,
+    kwargs: dict[str, Any] = None,
     key: str = None
 ) -> dict:
+    register(key, on_change, args, kwargs)
     if not options:
         options = DEFAULT_OPTIONS.copy()
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     _validate_scatter_data(data, options)
     data = add_control_points(data, options, t)
-    default_data = {k:v for k, v in data.items() if k not in options["fixed_lines"]}
+    default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
     return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
 
 
