@@ -38,7 +38,6 @@ st.header("Scatter chart")
 st.subheader("Numerical")
 st.write("Drag the dots to anywhere")
 x_num = [1, 2, 3, 4, 5]
-y = ["R", "G", "H"]
 scatter_data = {
     "trace 1": {"x": x_num, "y": [1, 4, 9, 16, 25]},
     "trace 2": {"x": x_num, "y": [1, 8, 27, 64, 125]},
