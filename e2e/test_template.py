@@ -1,13 +1,12 @@
 from pathlib import Path
 
 import pytest
-
-from playwright.sync_api import Page, expect
-
 from e2e_utils import StreamlitRunner
+from playwright.sync_api import Page, expect
 
 ROOT_DIRECTORY = Path(__file__).parent.parent.absolute()
 BASIC_EXAMPLE_FILE = ROOT_DIRECTORY / "my_component" / "example.py"
+
 
 @pytest.fixture(autouse=True, scope="module")
 def streamlit_app():
