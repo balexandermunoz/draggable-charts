@@ -1,6 +1,7 @@
-pandas==2.2.1
-playwright==1.42.0
-pytest==8.1.1
+numpy==1.26.4
+pandas==2.2.2
+playwright==1.43.0
+pytest==8.2.0
 Requests==2.31.0
 setuptools==65.5.0
 streamlit==1.33.0
