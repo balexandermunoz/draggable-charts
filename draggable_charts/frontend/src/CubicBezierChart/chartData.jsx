@@ -30,26 +30,37 @@ export function createFixedData(data, options) {
 export function createControlData(data, options) {
   const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
   const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
+  const lineControl = (ctx, value, length) => {
+    const index = ctx.p1DataIndex
+    if (
+      (index % 3 === 0 && index < length - 1) ||
+      index % 3 === 1 ||
+      index == length - 1
+    ) {
+      return value
+    } else {
+      return undefined
+    }
+  }
   const datasets = Object.entries(data)
     .filter(([colName]) => !fixedLines.includes(colName))
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
       const colorRGBA = rgba(colData.color)
-      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.7)`
-      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.5)`
+      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 1)`
+      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.8)`
       return {
         data: data,
         isControlPoint: true,
         label: colName,
-        fill: false,
-        tension: 0,
-        cubicInterpolationMode: "default",
         spanGaps: fillGaps,
         showLine: true,
-        borderDash: [5, 5],
-        borderWidth: 1,
+        borderDash: [8, 5],
+        borderWidth: 1.2,
+        segment: {
+          borderColor: (ctx) => lineControl(ctx, borderColorRGBA, data.length),
+        },
         backgroundColor: backgroundColorRGBA,
-        borderColor: borderColorRGBA,
       }
     })
 
@@ -69,8 +80,8 @@ export function createBezierData(data, options) {
       }))
 
       const bezierSegments = []
-      for (let i = 0; i < points.length - 2; i += 2) {
-        const bezierPoints = points.slice(i, i + 3)
+      for (let i = 0; i < points.length - 3; i += 3) {
+        const bezierPoints = points.slice(i, i + 4)
         const bezier = new Bezier(bezierPoints)
         const lut = bezier.getLUT(10)
         bezierSegments.push(...lut)
