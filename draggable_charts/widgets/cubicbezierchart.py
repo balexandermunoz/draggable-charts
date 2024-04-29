@@ -20,7 +20,6 @@ DEFAULT_OPTIONS = {
 
 def cubic_bezier_chart(
     data: dict,
-    t: float = 0.5,
     options: dict = None,
     on_change: Callable = None,
     args: tuple[Any, ...] = None,
@@ -30,7 +29,7 @@ def cubic_bezier_chart(
     register(key, on_change, args, kwargs)
     options = _set_options(data, options)
     _validate_scatter_data(data, options)
-    data = add_control_points(data, options, t)
+    data = add_control_points(data, options)
     data = _include_colors(data, options)
     default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
     return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
@@ -92,7 +91,7 @@ def _validate_scatter_data(data: dict, options: dict) -> None:
                 f"'x' and 'y' must be lists of the same length. Got: x={trace_data['x']}, y={trace_data['y']}")
 
 
-def add_control_points(data: dict, options: dict, t: float = 0.5) -> dict:
+def add_control_points(data: dict, options: dict) -> dict:
     for trace_name, trace_data in data.items():
         if trace_name in options["fixed_lines"]:
             continue

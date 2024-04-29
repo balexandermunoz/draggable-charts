@@ -9,7 +9,6 @@ data = {
 }
 new_data = cubic_bezier_chart(
     data,
-    t=0.75,
     options={
         "fixed_lines": ["trace 2"],
     }
