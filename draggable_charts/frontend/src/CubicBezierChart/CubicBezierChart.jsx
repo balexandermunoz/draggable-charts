@@ -235,9 +235,9 @@ class CubicBezierChart extends StreamlitComponentBase {
         ref={this.chartRef}
         data={{
           datasets: [
-            ...this.fixedData.datasets,
             ...this.state.controlData.datasets,
             ...this.state.bezierData.datasets,
+            ...this.fixedData.datasets,
           ],
         }}
         options={this.state.options}

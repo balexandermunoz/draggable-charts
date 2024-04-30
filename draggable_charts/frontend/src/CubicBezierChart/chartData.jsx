@@ -8,7 +8,7 @@ export function createFixedData(data, options) {
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
       const colorRGBA = rgba(colData.color)
-      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.5)`
+      const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.7)`
       return {
         data: data,
         isControlPoint: false,
@@ -88,7 +88,7 @@ export function createBezierData(data, options) {
       }
       const colorRGBA = rgba(traceData.color)
       const backgroundColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.7)`
-      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.4)`
+      const borderColorRGBA = `rgba(${colorRGBA[0]}, ${colorRGBA[1]}, ${colorRGBA[2]}, 0.6)`
       return {
         label: trace + " (bezier)",
         data: bezierSegments,
