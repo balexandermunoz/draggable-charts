@@ -35,7 +35,7 @@ export function createControlData(data, options) {
     if (
       (index % 3 === 0 && index < length - 1) ||
       index % 3 === 1 ||
-      index == length - 1
+      index === length - 1
     ) {
       return value
     } else {

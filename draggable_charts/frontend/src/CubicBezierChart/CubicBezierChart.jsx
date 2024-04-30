@@ -157,8 +157,8 @@ class CubicBezierChart extends StreamlitComponentBase {
       }
       else if (
         pointIndex % 3 === 0 &&
-        pointIndex != 0 &&
-        pointIndex != dataLen - 1
+        pointIndex !== 0 &&
+        pointIndex !== dataLen - 1
       ) {
         chart.data.datasets[datasetIndex].data[pointIndex - 1].x += deltaX
         chart.data.datasets[datasetIndex].data[pointIndex - 1].y += deltaY
@@ -171,13 +171,13 @@ class CubicBezierChart extends StreamlitComponentBase {
 
         this.state.originalData[datasetLabel]["x"][pointIndex + 1] += deltaX
         this.state.originalData[datasetLabel]["y"][pointIndex + 1] += deltaY
-      } else if ((pointIndex + 1) % 3 === 0 && pointIndex + 1 != dataLen - 1) {
+      } else if ((pointIndex + 1) % 3 === 0 && pointIndex + 1 !== dataLen - 1) {
         chart.data.datasets[datasetIndex].data[pointIndex + 2].x -= deltaX
         chart.data.datasets[datasetIndex].data[pointIndex + 2].y -= deltaY
 
         this.state.originalData[datasetLabel]["x"][pointIndex + 2] -= deltaX
         this.state.originalData[datasetLabel]["y"][pointIndex + 2] -= deltaY
-      } else if ((pointIndex - 1) % 3 === 0 && pointIndex - 1 != 0) {
+      } else if ((pointIndex - 1) % 3 === 0 && pointIndex - 1 !== 0) {
         chart.data.datasets[datasetIndex].data[pointIndex - 2].x -= deltaX
         chart.data.datasets[datasetIndex].data[pointIndex - 2].y -= deltaY
         this.state.originalData[datasetLabel]["x"][pointIndex - 2] -= deltaX
