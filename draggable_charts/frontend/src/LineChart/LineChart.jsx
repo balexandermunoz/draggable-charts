@@ -5,7 +5,7 @@ import React from "react"
 import { Line, getElementAtEvent } from "react-chartjs-2"
 import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
-import { createOptions } from "./chartOptions"
+import { createOptions } from "../Utils/chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
 

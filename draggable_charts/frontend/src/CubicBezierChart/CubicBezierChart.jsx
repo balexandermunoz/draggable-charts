@@ -10,7 +10,7 @@ import {
   createControlData,
   createBezierData,
 } from "./chartData"
-import { createOptions } from "./chartOptions"
+import { createOptions } from "../Utils/chartOptions"
 
 Chart.register(...registerables, zoomPlugin)
 

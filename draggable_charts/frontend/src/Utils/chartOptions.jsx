@@ -34,7 +34,7 @@ function createZoomOptions() {
       wheel: {
         enabled: true,
       },
-      mode: "y",
+      mode: "xy",
     },
     pan: {
       enabled: true,
