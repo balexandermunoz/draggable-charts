@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import streamlit as st
 
-from draggable_charts import line_chart, scatter_chart, bezier_chart
+from draggable_charts import line_chart, scatter_chart, bezier_chart, cubic_bezier_chart
 
 st.header("Line charts")
 st.subheader("Custom")
@@ -85,5 +85,18 @@ new_data = bezier_chart(data, t=0.5, options={
     "fixed_lines": ["trace 2"],
     "colors": ['blue', 'red']
 }
+)
+# new_data
+
+st.subheader("Cubic Bezier")
+data = {
+    "trace 1": {"x": [1, 2, 3, 4], "y": [-1, -5, 10, -10]},
+    "trace 2": {"x": [1, 2, 3, 4], "y": [1, 8, 27, 5]},
+}
+new_data = cubic_bezier_chart(
+    data,
+    options={
+        "fixed_lines": ["trace 2"],
+    }
 )
 # new_data
