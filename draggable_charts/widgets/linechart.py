@@ -4,12 +4,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import component, get_func_name, register
-
-DEFAULT_OPTIONS = {
-    "x_grid": True,
-    "y_grid": True,
-    "tension": 0.3
-}
+from ..utils.options import DEFAULT_OPTIONS
 
 
 def line_chart(

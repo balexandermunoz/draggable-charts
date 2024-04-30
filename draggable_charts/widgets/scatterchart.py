@@ -3,13 +3,7 @@ from typing import Any, Callable, Literal
 import numpy as np
 
 from ..utils import component, get_func_name, register
-
-DEFAULT_OPTIONS = {
-    "x_grid": True,
-    "y_grid": True,
-    "tension": 0.3,
-    "line": False,
-}
+from ..utils.options import DEFAULT_OPTIONS
 
 
 def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
