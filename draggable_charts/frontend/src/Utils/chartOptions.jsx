@@ -48,7 +48,7 @@ function createZoomOptions() {
 
 function createTitleOptions(options) {
   return {
-    display: true,
+    display: Boolean(options.title),
     text: options.title,
   }
 }
@@ -78,7 +78,7 @@ function createScalesOptions(options, theme) {
     display: true,
     type: options.x_type,
     title: {
-      display: true,
+      display: Boolean(options.x_label),
       text: options.x_label,
     },
     grid: {
@@ -96,7 +96,7 @@ function createScalesOptions(options, theme) {
     display: true,
     type: options.y_type,
     title: {
-      display: true,
+      display: Boolean(options.y_label),
       text: options.y_label,
     },
     grid: {
