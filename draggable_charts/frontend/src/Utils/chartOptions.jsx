@@ -8,7 +8,7 @@ export function createOptions(options, theme) {
     tooltips: {
       mode: "nearest",
     },
-    onHover: createHoverOptions(),
+    onHover: createHoverOptions(options),
     plugins: {
       zoom: createZoomOptions(),
       title: createTitleOptions(options),
@@ -18,14 +18,23 @@ export function createOptions(options, theme) {
   }
 }
 
-function createHoverOptions() {
+function createHoverOptions(options) {
   return (event, chartElement) => {
+    let cursorStyle = "default"
     if (chartElement.length > 0) {
-      event.native.target.style.cursor = "crosshair"
-    } else {
-      event.native.target.style.cursor = "default"
+      const datasets = event.chart.data.datasets
+      const label = datasets[chartElement[0].datasetIndex].label
+      cursorStyle = determineCursorStyle(label, options)
     }
+    event.native.target.style.cursor = cursorStyle
   }
+}
+
+function determineCursorStyle(label, options) {
+  if (options.fixed_lines.includes(label)) {
+    return "default"
+  }
+  return "crosshair"
 }
 
 function createZoomOptions() {
