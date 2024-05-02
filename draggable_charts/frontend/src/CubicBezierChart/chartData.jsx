@@ -17,6 +17,7 @@ export function createFixedData(data, options) {
         spanGaps: false,
         showLine: true,
         backgroundColor: backgroundColorRGBA,
+        spanGaps: options.fill_gaps,
         borderColor: colData.color,
         pointRadius: colData.point_radius,
       }
@@ -28,7 +29,6 @@ export function createFixedData(data, options) {
 }
 
 export function createControlData(data, options) {
-  const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
   const lineControl = (ctx, value, length) => {
     const index = ctx.p1DataIndex
     if (
@@ -52,7 +52,7 @@ export function createControlData(data, options) {
         data: data,
         isControlPoint: true,
         label: colName,
-        spanGaps: fillGaps,
+        spanGaps: options.fill_gaps,
         showLine: true,
         borderDash: [8, 5],
         borderWidth: 1.2,

@@ -28,7 +28,6 @@ export function createFixedData(data, options) {
 }
 
 export function createControlData(data, options) {
-  const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
   const datasets = Object.entries(data)
     .filter(([colName]) => !options.fixed_lines.includes(colName))
     .map(([colName, colData], index) => {
@@ -43,7 +42,7 @@ export function createControlData(data, options) {
         fill: false,
         tension: 0,
         cubicInterpolationMode: "default",
-        spanGaps: fillGaps,
+        spanGaps: options.fill_gaps,
         showLine: true,
         borderDash: [5, 5],
         borderWidth: 1,
