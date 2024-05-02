@@ -18,6 +18,7 @@ export function createChartData(data, options) {
       spanGaps: fillGaps,
       backgroundColor: colData.color,
       borderColor: colData.color,
+      pointRadius: colData.point_radius,
     }
   })
 

@@ -50,7 +50,6 @@ def scatter_chart(
     key: str = None
 ) -> dict:
     register(key, on_change, args, kwargs)
-    options = set_options(data, options)
-    data = include_colors(data, options)
+    data, options = set_options(data, options)
     _validate_scatter_data(data, options)
     return component(id=get_func_name(), kw=locals(), default=data, key=key)

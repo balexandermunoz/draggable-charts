@@ -19,6 +19,7 @@ export function createFixedData(data, options) {
         showLine: true,
         backgroundColor: backgroundColorRGBA,
         borderColor: colData.color,
+        pointRadius: colData.point_radius,
       }
     })
 

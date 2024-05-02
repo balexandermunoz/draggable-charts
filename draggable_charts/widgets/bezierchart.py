@@ -14,10 +14,9 @@ def bezier_chart(
     key: str = None
 ) -> dict:
     register(key, on_change, args, kwargs)
-    options = set_options(data, options)
     _validate_scatter_data(data, options)
     data = add_control_points(data, options, t)
-    data = include_colors(data, options)
+    data, options = set_options(data, options)
     default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
     return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
 

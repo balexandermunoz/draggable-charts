@@ -97,6 +97,8 @@ new_data = cubic_bezier_chart(
     data,
     options={
         "fixed_lines": ["trace 2"],
+        "colors": ['blue', 'red'],
+        "point_radius": [3, 0]
     }
 )
 # new_data

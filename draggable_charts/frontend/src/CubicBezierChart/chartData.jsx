@@ -19,6 +19,7 @@ export function createFixedData(data, options) {
         showLine: true,
         backgroundColor: backgroundColorRGBA,
         borderColor: colData.color,
+        pointRadius: colData.point_radius,
       }
     })
 
@@ -61,6 +62,7 @@ export function createControlData(data, options) {
           borderColor: (ctx) => lineControl(ctx, borderColorRGBA, data.length),
         },
         backgroundColor: backgroundColorRGBA,
+        pointRadius: colData.point_radius,
       }
     })
 
@@ -95,9 +97,9 @@ export function createBezierData(data, options) {
         isControlPoint: false,
         showLine: true,
         tension: 0.3,
-        pointRadius: 0,
         backgroundColor: backgroundColorRGBA,
         borderColor: borderColorRGBA,
+        pointRadius: 0,
       }
     })
 
