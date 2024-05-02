@@ -14,6 +14,7 @@ DEFAULT_OPTIONS = {
         "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#651067"
     ],
     "point_radius": [3],
+    "fill_gaps": False,
 }
 
 
@@ -24,6 +25,7 @@ def set_options(data: dict, options: dict) -> dict:
     options['y_type'] = _get_scale_type(data, 'y')
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
+    options['fill_gaps'] = options.get('fill_gaps', DEFAULT_OPTIONS['fill_gaps'])
     
     data = include_colors(data, options)
     data = include_point_radius(data, options)
