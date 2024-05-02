@@ -16,15 +16,10 @@ export function createChartData(data, options) {
       lineTension: tension,
       cubicInterpolationMode: "default",
       spanGaps: fillGaps,
+      backgroundColor: colData.color,
+      borderColor: colData.color,
     }
   })
-
-  if (options && options.colors) {
-    datasets.forEach((dataset, index) => {
-      dataset.backgroundColor = options.colors[index]
-      dataset.borderColor = options.colors[index]
-    })
-  }
 
   return {
     labels: xLabels,
