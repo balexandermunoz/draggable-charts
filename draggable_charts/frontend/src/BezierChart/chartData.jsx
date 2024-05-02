@@ -2,9 +2,8 @@ import { Bezier } from "bezier-js"
 import rgba from "color-rgba"
 
 export function createFixedData(data, options) {
-  const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
   const datasets = Object.entries(data)
-    .filter(([colName]) => fixedLines.includes(colName))
+    .filter(([colName]) => options.fixed_lines.includes(colName))
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
       const colorRGBA = rgba(colData.color)
