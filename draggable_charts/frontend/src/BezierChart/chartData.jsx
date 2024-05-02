@@ -29,9 +29,8 @@ export function createFixedData(data, options) {
 
 export function createControlData(data, options) {
   const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
-  const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
   const datasets = Object.entries(data)
-    .filter(([colName]) => !fixedLines.includes(colName))
+    .filter(([colName]) => !options.fixed_lines.includes(colName))
     .map(([colName, colData], index) => {
       const data = colData.x.map((x, i) => ({ x, y: colData.y[i] }))
       const colorRGBA = rgba(colData.color)
@@ -59,9 +58,8 @@ export function createControlData(data, options) {
 }
 
 export function createBezierData(data, options) {
-  const fixedLines = options && options.fixed_lines ? options.fixed_lines : []
   const datasets = Object.entries(data)
-    .filter(([trace]) => !fixedLines.includes(trace))
+    .filter(([trace]) => !options.fixed_lines.includes(trace))
     .map(([trace, traceData], i) => {
       const points = traceData.x.map((x, j) => ({
         x: x,
