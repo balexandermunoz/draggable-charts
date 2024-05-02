@@ -3,7 +3,7 @@ from typing import Any, Callable, Literal
 import numpy as np
 
 from ..utils import component, get_func_name, register
-from ..utils.options import DEFAULT_OPTIONS
+from ..utils.options import set_options, include_colors
 
 
 def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
@@ -50,9 +50,7 @@ def scatter_chart(
     key: str = None
 ) -> dict:
     register(key, on_change, args, kwargs)
-    if not options:
-        options = DEFAULT_OPTIONS.copy()
-    options['x_type'] = _get_scale_type(data, 'x')
-    options['y_type'] = _get_scale_type(data, 'y')
+    options = set_options(data, options)
+    data = include_colors(data, options)
     _validate_scatter_data(data, options)
     return component(id=get_func_name(), kw=locals(), default=data, key=key)

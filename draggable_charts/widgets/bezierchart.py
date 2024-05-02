@@ -1,9 +1,8 @@
-from typing import Any, Callable, Literal
-
-import numpy as np
+from typing import Any, Callable
 
 from ..utils import component, get_func_name, register
-from ..utils.options import DEFAULT_OPTIONS
+from ..utils.options import set_options, include_colors
+
 
 def bezier_chart(
     data: dict,
@@ -15,32 +14,12 @@ def bezier_chart(
     key: str = None
 ) -> dict:
     register(key, on_change, args, kwargs)
-    options = _set_options(data, options)
+    options = set_options(data, options)
     _validate_scatter_data(data, options)
     data = add_control_points(data, options, t)
-    data = _include_colors(data, options)
+    data = include_colors(data, options)
     default_data = {k: v for k, v in data.items() if k not in options["fixed_lines"]}
     return component(id=get_func_name(), kw=locals(), default=default_data, key=key)
-
-def _include_colors(data: dict, options: dict) -> dict:
-    for i, (trace_name, trace_data) in enumerate(data.items()):
-        trace_data['color'] = options['colors'][i % len(options['colors'])]
-    return data
-
-
-def _set_options(data: dict, options: dict) -> dict:
-    if not options:
-        options = DEFAULT_OPTIONS.copy()
-    options['x_type'] = _get_scale_type(data, 'x')
-    options['y_type'] = _get_scale_type(data, 'y')
-    options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
-    return options
-
-def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
-    for trace_data in data.values():
-        if not all(isinstance(val, (int, float, np.number)) for val in trace_data[axis]):
-            return 'category'
-    return 'linear'
 
 
 def _validate_scatter_data(data: dict, options: dict) -> None:
