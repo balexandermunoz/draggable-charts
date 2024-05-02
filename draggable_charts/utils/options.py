@@ -12,7 +12,8 @@ DEFAULT_OPTIONS = {
         "#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6",
         "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11",
         "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#651067"
-    ]
+    ],
+    "point_radius": [3],
 }
 
 
@@ -22,12 +23,22 @@ def set_options(data: dict, options: dict) -> dict:
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
-    return options
+    options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
+    
+    data = include_colors(data, options)
+    data = include_point_radius(data, options)
+    return data, options
 
 
 def include_colors(data: dict, options: dict) -> dict:
-    for i, (trace_name, trace_data) in enumerate(data.items()):
+    for i, trace_data in enumerate(data.values()):
         trace_data['color'] = options['colors'][i % len(options['colors'])]
+    return data
+
+
+def include_point_radius(data: dict, options: dict) -> dict:
+    for i, trace_data in enumerate(data.values()):
+        trace_data['point_radius'] = options['point_radius'][i % len(options['point_radius'])]
     return data
 
 
