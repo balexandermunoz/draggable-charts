@@ -13,6 +13,7 @@ DEFAULT_OPTIONS = {
         "#DD4477", "#66AA00", "#B82E2E", "#316395", "#994499", "#22AA99", "#AAAA11",
         "#6633CC", "#E67300", "#8B0707", "#329262", "#5574A6", "#651067"
     ],
+    "border_dash": [(0, 0)],
     "point_radius": [3],
     "fill_gaps": False,
     "labels": {},
@@ -25,11 +26,13 @@ def set_options(data: dict, options: dict) -> dict:
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
+    options['border_dash'] = options.get('border_dash', DEFAULT_OPTIONS['border_dash'])
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
     options['fill_gaps'] = options.get('fill_gaps', DEFAULT_OPTIONS['fill_gaps'])
     options['labels'] = options.get('labels', DEFAULT_OPTIONS['labels'])
     
     data = include_colors(data, options)
+    data = include_border_dash(data, options)
     data = include_point_radius(data, options)
     return data, options
 
@@ -37,6 +40,12 @@ def set_options(data: dict, options: dict) -> dict:
 def include_colors(data: dict, options: dict) -> dict:
     for i, trace_data in enumerate(data.values()):
         trace_data['color'] = options['colors'][i % len(options['colors'])]
+    return data
+
+
+def include_border_dash(data: dict, options: dict) -> dict:
+    for i, trace_data in enumerate(data.values()):
+        trace_data['border_dash'] = options['border_dash'][i % len(options['border_dash'])]
     return data
 
 

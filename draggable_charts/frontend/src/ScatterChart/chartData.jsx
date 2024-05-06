@@ -18,6 +18,7 @@ export function createChartData(data, options) {
       backgroundColor: colData.color,
       borderColor: colData.color,
       pointRadius: colData.point_radius,
+      borderDash: colData.border_dash,
     }
   })
 

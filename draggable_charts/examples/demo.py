@@ -99,6 +99,7 @@ new_data = cubic_bezier_chart(
     options={
         "fixed_lines": ["trace 2"],
         "colors": ['blue', 'red'],
+        "border_dash": [(10, 2), (5, 10)],  # Default: [(0, 0)]
         "point_radius": [3, 0],
         "labels": {"trace 1": "Custom label", "trace 2": "Custom 2", "trace 2 (bezier)": "Hola"}
     }

@@ -20,6 +20,7 @@ export function createFixedData(data, options) {
         spanGaps: options.fill_gaps,
         borderColor: colData.color,
         pointRadius: colData.point_radius,
+        borderDash: colData.border_dash,
       }
     })
 
@@ -97,6 +98,7 @@ export function createBezierData(data, options) {
         backgroundColor: backgroundColorRGBA,
         borderColor: borderColorRGBA,
         pointRadius: 0,
+        borderDash: traceData.border_dash,
       }
     })
 
