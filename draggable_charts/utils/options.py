@@ -15,6 +15,7 @@ DEFAULT_OPTIONS = {
     ],
     "point_radius": [3],
     "fill_gaps": False,
+    "labels": {},
 }
 
 
@@ -26,6 +27,7 @@ def set_options(data: dict, options: dict) -> dict:
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
     options['fill_gaps'] = options.get('fill_gaps', DEFAULT_OPTIONS['fill_gaps'])
+    options['labels'] = options.get('labels', DEFAULT_OPTIONS['labels'])
     
     data = include_colors(data, options)
     data = include_point_radius(data, options)
