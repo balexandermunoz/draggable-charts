@@ -25,6 +25,7 @@ plot_options = {
     'tension': 0,  # default: 0.3
     'fill_gaps': True,  # default: False
     'fixed_lines': ["Col3"],  # default: []
+    'labels': {"Col1": "Custom label", "Col2": "Custom 2"},  # default: {}
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
 # new_data
@@ -91,14 +92,15 @@ new_data = bezier_chart(data, t=0.5, options={
 st.subheader("Cubic Bezier")
 data = {
     "trace 1": {"x": [1, 2, 3, 4], "y": [-1, -5, 10, -10]},
-    "trace 2": {"x": [1, 2, 3, 4], "y": [1, 8, 27, 5]},
+    "trace 2": {"x": [1, 2, 3, 4], "y": [-1, -5, 10, -10]},
 }
 new_data = cubic_bezier_chart(
     data,
     options={
         "fixed_lines": ["trace 2"],
         "colors": ['blue', 'red'],
-        "point_radius": [3, 0]
+        "point_radius": [3, 0],
+        "labels": {"trace 1": "Custom label", "trace 2": "Custom 2", "trace 2 (bezier)": "Hola"}
     }
 )
 # new_data

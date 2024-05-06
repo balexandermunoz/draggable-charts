@@ -1,3 +1,5 @@
+import { Chart } from "chart.js"
+
 export function createOptions(options, theme) {
   return {
     responsive: true,
@@ -5,14 +7,12 @@ export function createOptions(options, theme) {
     animation: {
       duration: 0,
     },
-    tooltips: {
-      mode: "nearest",
-    },
     onHover: createHoverOptions(options),
     plugins: {
       zoom: createZoomOptions(),
       title: createTitleOptions(options),
       legend: createLegendOptions(options),
+      tooltip: createTooltipOptions(options, theme),
     },
     scales: createScalesOptions(options, theme),
   }
@@ -71,6 +71,22 @@ function createLegendOptions(options) {
       boxWidth: 16,
       boxHeight: 8,
       padding: 8,
+      generateLabels: function (chart) {
+        const labels =
+          Chart.defaults.plugins.legend.labels.generateLabels(chart)
+        labels.forEach((label) => {
+          if (options.labels.hasOwnProperty(label.text)) {
+            label.text = options.labels[label.text]
+          }
+          if (
+            options.labels.hasOwnProperty(label.text.replace(" (bezier)", ""))
+          ) {
+            label.text =
+              options.labels[label.text.replace(" (bezier)", "")] + " (bezier)"
+          }
+        })
+        return labels
+      },
     },
     onHover: (event, legendItem, legend) => {
       if (legendItem) {
@@ -123,5 +139,28 @@ function createScalesOptions(options, theme) {
   return {
     x: xScaleOptions,
     y: yScaleOptions,
+  }
+}
+
+function createTooltipOptions(options, theme) {
+  return {
+    filter: function (data) {
+      const pointRadius = data.dataset.pointRadius
+      return pointRadius !== 0
+    },
+    callbacks: {
+      title: function (data) {
+        const label = data[0].dataset.label
+        if (options.labels.hasOwnProperty(label)) {
+          return `${options.labels[label]}`
+        }
+        return `${label}`
+      },
+      label: function (event) {
+        const Xvalue = event.parsed.x.toFixed(2)
+        const Yvalue = event.parsed.y.toFixed(2)
+        return `${Xvalue}, ${Yvalue}`
+      },
+    },
   }
 }
