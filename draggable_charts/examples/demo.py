@@ -14,7 +14,7 @@ initial_data = pd.DataFrame({
 })
 
 plot_options = {
-    "title": "My Plot",
+    "title": "My Plot", # Default: No title
     "colors": ['#1f77b4', '#ff7f0e', '#2ca02c'],
     "x_label": "X Axis",  # Default: No text
     "y_label": "Y Axis",  # Default: No text
@@ -26,9 +26,12 @@ plot_options = {
     'fill_gaps': True,  # default: False
     'fixed_lines': ["Col3"],  # default: []
     'labels': {"Col1": "Custom label", "Col2": "Custom 2"},  # default: {}
+    "point_radius": [3, 5, 2], # default: [3]
+    "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)]
+
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
-# new_data
+new_data
 
 st.subheader("Default")
 series_data = pd.Series([1, 2, 3, 4, 5, np.nan, 7, 8, 9, 10])
@@ -58,7 +61,7 @@ scatter_data = {
 }
 new_scatter_data = scatter_chart(
     data=scatter_data,
-    options={"x_labels": x_cat, "y_labels": y_cat, "show_line": True}
+    options={"x_labels": x_cat, "y_labels": y_cat, "show_line": False}
 )
 # new_scatter_data
 

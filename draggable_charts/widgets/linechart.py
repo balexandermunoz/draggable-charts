@@ -4,7 +4,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import component, get_func_name, register
-from ..utils.options import DEFAULT_OPTIONS
+from ..utils.options import set_options
 
 
 def line_chart(
@@ -52,10 +52,9 @@ def line_chart(
         If the data is not a pandas Series, DataFrame, or a dictionary, or if the DataFrame does not have only numeric columns.
     """
     register(key, on_change, args, kwargs)
-    if not options:
-        options = DEFAULT_OPTIONS.copy()
     validate_data(data)
     dict_data = transform_data(data)
+    dict_data, options = set_options(dict_data, options)
     new_data = component(
         id=get_func_name(),
         kw={"data": dict_data, "options": options},
@@ -87,9 +86,10 @@ def transform_data(data) -> dict:
     if isinstance(data, pd.Series):
         if not data.name:
             data.name = "data"
-        return {data.name: data.replace({np.nan: None}).to_dict()}
+        dict_data = {data.name: data.replace({np.nan: None}).to_dict()}
     elif isinstance(data, pd.DataFrame):
-        return data.replace({np.nan: None}).to_dict()
+        dict_data = data.replace({np.nan: None}).to_dict()
+    return dict_data
 
 
 def postprocess_data(data, new_data) -> pd.DataFrame:

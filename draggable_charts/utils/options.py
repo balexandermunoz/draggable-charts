@@ -6,7 +6,7 @@ DEFAULT_OPTIONS = {
     "x_grid": True,
     "y_grid": True,
     "tension": 0.3,
-    "line": False,
+    "show_line": True,
     "fixed_lines": [],
     "colors": [
         "#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#3B3EAC", "#0099C6",
@@ -25,6 +25,10 @@ def set_options(data: dict, options: dict) -> dict:
         options = DEFAULT_OPTIONS.copy()
     options['x_type'] = _get_scale_type(data, 'x')
     options['y_type'] = _get_scale_type(data, 'y')
+    options['tension'] = options.get('tension', DEFAULT_OPTIONS['tension'])
+    options['show_line'] = options.get('show_line', DEFAULT_OPTIONS['show_line'])
+    options['fixed_lines'] = options.get('fixed_lines', DEFAULT_OPTIONS['fixed_lines'])
+    
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
     options['border_dash'] = options.get('border_dash', DEFAULT_OPTIONS['border_dash'])
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
@@ -57,6 +61,8 @@ def include_point_radius(data: dict, options: dict) -> dict:
 
 def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
     for trace_data in data.values():
+        if axis not in trace_data:
+            return 'linear'
         if not all(isinstance(val, (int, float, np.number)) for val in trace_data[axis]):
             return 'category'
     return 'linear'

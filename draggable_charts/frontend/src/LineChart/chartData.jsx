@@ -1,30 +1,23 @@
 export function createChartData(data, options) {
-  const tension =
-    options && options.tension !== undefined
-      ? Math.min(Math.max(options.tension, 0), 0.4)
-      : 0.3
-  const fillGaps = options && options.fill_gaps ? options.fill_gaps : false
+  const xLabels = Object.keys(data[Object.keys(data)[0]])
   const datasets = Object.entries(data).map(([colName, colData], index) => {
     const data = Object.values(colData)
     return {
-      data,
+      showLine: options.show_line,
+      data: data,
       label: colName,
-      fill: false,
-      lineTension: tension,
+      lineTension: options.tension,
       cubicInterpolationMode: "default",
-      spanGaps: fillGaps,
+      spanGaps: options.fill_gaps,
+      backgroundColor: colData.color,
+      borderColor: colData.color,
+      pointRadius: colData.point_radius,
+      borderDash: colData.border_dash,
     }
   })
 
-  if (options && options.colors) {
-    datasets.forEach((dataset, index) => {
-      dataset.backgroundColor = options.colors[index]
-      dataset.borderColor = options.colors[index]
-    })
-  }
-
   return {
-    labels: Object.keys(data[Object.keys(data)[0]]),
+    labels: xLabels,
     datasets: datasets,
   }
 }
