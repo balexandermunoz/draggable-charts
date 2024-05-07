@@ -7,6 +7,7 @@ import { Scatter, getElementAtEvent } from "react-chartjs-2"
 import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
+import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -60,70 +61,24 @@ class ScatterChart extends StreamlitComponentBase {
     }
   }
 
-  calculateNewYValue = (position, chartArea, yAxis) => {
-    if (this.props.args.options.y_type === "category") {
-      const categories = yAxis.getLabels()
-      const categoryIndex = Math.round(
-        this.map(
-          position.y,
-          chartArea.top,
-          chartArea.bottom,
-          0,
-          categories.length - 1
-        )
-      )
-      return categories[categoryIndex]
-    } else {
-      return this.map(
-        position.y,
-        chartArea.bottom,
-        chartArea.top,
-        yAxis.min,
-        yAxis.max
-      )
-    }
-  }
-
-  calculateNewXValue = (position, chartArea, xAxis) => {
-    if (this.props.args.options.x_type === "category") {
-      const categories = xAxis.getLabels()
-      const categoryIndex = Math.round(
-        this.map(
-          position.x,
-          chartArea.left,
-          chartArea.right,
-          0,
-          categories.length - 1
-        )
-      )
-      return categories[categoryIndex]
-    } else {
-      return this.map(
-        position.x,
-        chartArea.left,
-        chartArea.right,
-        xAxis.min,
-        xAxis.max
-      )
-    }
-  }
-
   moveHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
       const position = getRelativePosition(event, this.chartRef.current)
       const chartArea = chart.chartArea
 
-      const newYValue = this.calculateNewYValue(
+      const newYValue = calculateNewYValue(
         position,
         chartArea,
-        chart.scales.y
+        chart.scales.y,
+        this.props.args.options.y_type
       )
 
-      const newXValue = this.calculateNewXValue(
+      const newXValue = calculateNewXValue(
         position,
         chartArea,
-        chart.scales.x
+        chart.scales.x,
+        this.props.args.options.x_type
       )
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
@@ -152,10 +107,6 @@ class ScatterChart extends StreamlitComponentBase {
       this.setState({ activePoint: null })
       this.togglePan(true)
     }
-  }
-
-  map = (value, start1, stop1, start2, stop2) => {
-    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
   }
 
   render() {

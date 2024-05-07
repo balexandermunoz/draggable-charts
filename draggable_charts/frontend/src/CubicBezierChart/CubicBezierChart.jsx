@@ -11,6 +11,7 @@ import {
   createBezierData,
 } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
+import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -81,107 +82,75 @@ class CubicBezierChart extends StreamlitComponentBase {
     }
   }
 
-  calculateNewYValue = (position, chartArea, yAxis) => {
-    return this.map(
-      position.y,
-      chartArea.bottom,
-      chartArea.top,
-      yAxis.min,
-      yAxis.max
-    )
-  }
-
-  calculateNewXValue = (position, chartArea, xAxis) => {
-    return this.map(
-      position.x,
-      chartArea.left,
-      chartArea.right,
-      xAxis.min,
-      xAxis.max
-    )
-  }
-
   moveHandler = (event) => {
     if (this.state.activePoint) {
       const chart = this.chartRef.current
       const activePoint = this.state.activePoint
       const position = getRelativePosition(event, chart)
       const chartArea = chart.chartArea
-
-      const newYValue = this.calculateNewYValue(
-        position,
-        chartArea,
-        chart.scales.y
-      )
-
-      const newXValue = this.calculateNewXValue(
-        position,
-        chartArea,
-        chart.scales.x
-      )
+      const newYValue = calculateNewYValue(position, chartArea, chart.scales.y)
+      const newXValue = calculateNewXValue(position, chartArea, chart.scales.x)
 
       // Update control point position
       const datasetIndex = activePoint.datasetIndex
+      const dataset = chart.data.datasets[datasetIndex]
       const pointIndex = activePoint.index
-      const deltaY =
-        newYValue - chart.data.datasets[datasetIndex].data[pointIndex].y
-      const deltaX =
-        newXValue - chart.data.datasets[datasetIndex].data[pointIndex].x
+      const deltaY = newYValue - dataset.data[pointIndex].y
+      const deltaX = newXValue - dataset.data[pointIndex].x
 
-      chart.data.datasets[datasetIndex].data[pointIndex].x = newXValue
-      chart.data.datasets[datasetIndex].data[pointIndex].y = newYValue
+      dataset.data[pointIndex].x = newXValue
+      dataset.data[pointIndex].y = newYValue
 
       // Set new values in originalData
-      const datasetLabel = chart.data.datasets[datasetIndex].label
-      const xValue = chart.data.datasets[datasetIndex].data[pointIndex].x
-      const yValue = chart.data.datasets[datasetIndex].data[pointIndex].y
-      this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
-      this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
+      const datasetLabel = dataset.label
+      const originalDataset = this.state.originalData[datasetLabel] 
+      const xValue = dataset.data[pointIndex].x
+      const yValue = dataset.data[pointIndex].y
+      originalDataset["x"][pointIndex] = xValue
+      originalDataset["y"][pointIndex] = yValue
 
       // If activePoint index is 3, move points 2 and 4 as well
       // If activePoint index is 3, update originalData for points 2 and 4 as well
-      const dataLen = chart.data.datasets[datasetIndex].data.length
+      const dataLen = dataset.data.length
       if (pointIndex === 0) {
-        chart.data.datasets[datasetIndex].data[pointIndex + 1].x += deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex + 1].y += deltaY
+        dataset.data[pointIndex + 1].x += deltaX
+        dataset.data[pointIndex + 1].y += deltaY
 
-        this.state.originalData[datasetLabel]["x"][pointIndex + 1] += deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex + 1] += deltaY
-      }
-      else if (pointIndex === dataLen - 1) {
-        chart.data.datasets[datasetIndex].data[pointIndex - 1].x += deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex - 1].y += deltaY
+        originalDataset["x"][pointIndex + 1] += deltaX
+        originalDataset["y"][pointIndex + 1] += deltaY
+      } else if (pointIndex === dataLen - 1) {
+        dataset.data[pointIndex - 1].x += deltaX
+        dataset.data[pointIndex - 1].y += deltaY
 
-        this.state.originalData[datasetLabel]["x"][pointIndex - 1] += deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex - 1] += deltaY
-      }
-      else if (
+        originalDataset["x"][pointIndex - 1] += deltaX
+        originalDataset["y"][pointIndex - 1] += deltaY
+      } else if (
         pointIndex % 3 === 0 &&
         pointIndex !== 0 &&
         pointIndex !== dataLen - 1
       ) {
-        chart.data.datasets[datasetIndex].data[pointIndex - 1].x += deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex - 1].y += deltaY
+        dataset.data[pointIndex - 1].x += deltaX
+        dataset.data[pointIndex - 1].y += deltaY
 
-        chart.data.datasets[datasetIndex].data[pointIndex + 1].x += deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex + 1].y += deltaY
+        dataset.data[pointIndex + 1].x += deltaX
+        dataset.data[pointIndex + 1].y += deltaY
 
-        this.state.originalData[datasetLabel]["x"][pointIndex - 1] += deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex - 1] += deltaY
+        originalDataset["x"][pointIndex - 1] += deltaX
+        originalDataset["y"][pointIndex - 1] += deltaY
 
-        this.state.originalData[datasetLabel]["x"][pointIndex + 1] += deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex + 1] += deltaY
+        originalDataset["x"][pointIndex + 1] += deltaX
+        originalDataset["y"][pointIndex + 1] += deltaY
       } else if ((pointIndex + 1) % 3 === 0 && pointIndex + 1 !== dataLen - 1) {
-        chart.data.datasets[datasetIndex].data[pointIndex + 2].x -= deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex + 2].y -= deltaY
+        dataset.data[pointIndex + 2].x -= deltaX
+        dataset.data[pointIndex + 2].y -= deltaY
 
-        this.state.originalData[datasetLabel]["x"][pointIndex + 2] -= deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex + 2] -= deltaY
+        originalDataset["x"][pointIndex + 2] -= deltaX
+        originalDataset["y"][pointIndex + 2] -= deltaY
       } else if ((pointIndex - 1) % 3 === 0 && pointIndex - 1 !== 0) {
-        chart.data.datasets[datasetIndex].data[pointIndex - 2].x -= deltaX
-        chart.data.datasets[datasetIndex].data[pointIndex - 2].y -= deltaY
-        this.state.originalData[datasetLabel]["x"][pointIndex - 2] -= deltaX
-        this.state.originalData[datasetLabel]["y"][pointIndex - 2] -= deltaY
+        dataset.data[pointIndex - 2].x -= deltaX
+        dataset.data[pointIndex - 2].y -= deltaY
+        originalDataset["x"][pointIndex - 2] -= deltaX
+        originalDataset["y"][pointIndex - 2] -= deltaY
       }
 
       // Recalculate Bezier data
@@ -223,10 +192,6 @@ class CubicBezierChart extends StreamlitComponentBase {
       })
     })
     return result
-  }
-
-  map = (value, start1, stop1, start2, stop2) => {
-    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
   }
 
   render() {

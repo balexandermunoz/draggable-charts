@@ -11,6 +11,7 @@ import {
   createBezierData,
 } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
+import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -81,26 +82,6 @@ class BezierChart extends StreamlitComponentBase {
     }
   }
 
-  calculateNewYValue = (position, chartArea, yAxis) => {
-    return this.map(
-      position.y,
-      chartArea.bottom,
-      chartArea.top,
-      yAxis.min,
-      yAxis.max
-    )
-  }
-
-  calculateNewXValue = (position, chartArea, xAxis) => {
-    return this.map(
-      position.x,
-      chartArea.left,
-      chartArea.right,
-      xAxis.min,
-      xAxis.max
-    )
-  }
-
   updateControlPointPosition = (chart, activePoint, newXValue, newYValue) => {
     const datasetIndex = activePoint.datasetIndex
     const pointIndex = activePoint.index
@@ -126,17 +107,8 @@ class BezierChart extends StreamlitComponentBase {
       const position = getRelativePosition(event, chart)
       const chartArea = chart.chartArea
 
-      const newYValue = this.calculateNewYValue(
-        position,
-        chartArea,
-        chart.scales.y
-      )
-
-      const newXValue = this.calculateNewXValue(
-        position,
-        chartArea,
-        chart.scales.x
-      )
+      const newYValue = calculateNewYValue(position, chartArea, chart.scales.y)
+      const newXValue = calculateNewXValue(position, chartArea, chart.scales.x)
 
       // Update control point position
       this.updateControlPointPosition(chart, activePoint, newXValue, newYValue)
@@ -182,10 +154,6 @@ class BezierChart extends StreamlitComponentBase {
       })
     })
     return result
-  }
-
-  map = (value, start1, stop1, start2, stop2) => {
-    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
   }
 
   render() {

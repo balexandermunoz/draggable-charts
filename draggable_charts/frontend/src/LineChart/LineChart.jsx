@@ -6,6 +6,7 @@ import { Line, getElementAtEvent } from "react-chartjs-2"
 import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
+import { calculateNewYValue } from "../Utils/handlers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -65,13 +66,7 @@ class LineChart extends StreamlitComponentBase {
       const position = getRelativePosition(event, this.chartRef.current)
       const chartArea = chart.chartArea
       const yAxis = chart.scales.y
-      const yValue = this.map(
-        position.y,
-        chartArea.bottom,
-        chartArea.top,
-        yAxis.min,
-        yAxis.max
-      )
+      const yValue = calculateNewYValue(position, chartArea, yAxis)
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
         this.state.activePoint.index
       ] = yValue
@@ -93,10 +88,6 @@ class LineChart extends StreamlitComponentBase {
       this.togglePan(true)
       Streamlit.setComponentValue(this.state.originalData)
     }
-  }
-
-  map = (value, start1, stop1, start2, stop2) => {
-    return start2 + (stop2 - start2) * ((value - start1) / (stop1 - start1))
   }
 
   render() {
