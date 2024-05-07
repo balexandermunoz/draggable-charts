@@ -14,7 +14,6 @@ export function createFixedData(data, options) {
         label: colName,
         fill: false,
         tension: 0.3,
-        spanGaps: false,
         showLine: true,
         backgroundColor: backgroundColorRGBA,
         spanGaps: options.fill_gaps,
