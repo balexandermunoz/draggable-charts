@@ -1,4 +1,5 @@
 import { Chart } from "chart.js"
+import millify from "millify"
 
 export function createOptions(options, theme) {
   return {
@@ -98,10 +99,22 @@ function createLegendOptions(options) {
   }
 }
 
+function formatTickValue(val, index, options) {
+  if (options.x_type === "linear") {
+    return millify(val);
+  }
+  return this.getLabelForValue(val);
+}
+
 function createScalesOptions(options, theme) {
   const xScaleOptions = {
     display: true,
     type: options.x_type,
+    ticks: {
+      callback: function(val, index) {
+        return formatTickValue.call(this, val, index, options);
+      },
+    },
     title: {
       display: Boolean(options.x_label),
       text: options.x_label,
@@ -120,6 +133,11 @@ function createScalesOptions(options, theme) {
   const yScaleOptions = {
     display: true,
     type: options.y_type,
+    ticks: {
+      callback: function(val, index) {
+        return formatTickValue.call(this, val, index, options);
+      },
+    },
     title: {
       display: Boolean(options.y_label),
       text: options.y_label,

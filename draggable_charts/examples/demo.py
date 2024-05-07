@@ -8,7 +8,7 @@ st.header("Line charts")
 st.subheader("Custom")
 st.write("Drag the points vertically")
 initial_data = pd.DataFrame({
-    "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10000],
     "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
     "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -50, -100]
 })
