@@ -1,3 +1,4 @@
+import inspect
 from typing import Literal
 
 import numpy as np
@@ -23,23 +24,25 @@ DEFAULT_OPTIONS = {
 
 
 def set_options(data: dict, options: dict) -> dict:
+    caller_name = inspect.stack()[1].function
     if not options:
         options = DEFAULT_OPTIONS.copy()
-    options['x_type'] = _get_scale_type(data, 'x')
-    options['y_type'] = _get_scale_type(data, 'y')
+    options['x_type'] = _get_scale_type(data, 'x', caller_name)
+    options['y_type'] = _get_scale_type(data, 'y', caller_name)
+
     options['tension'] = options.get('tension', DEFAULT_OPTIONS['tension'])
     options['show_line'] = options.get('show_line', DEFAULT_OPTIONS['show_line'])
     options['fixed_lines'] = options.get('fixed_lines', DEFAULT_OPTIONS['fixed_lines'])
-    
+
     options['colors'] = options.get('colors', DEFAULT_OPTIONS['colors'])
     options['border_dash'] = options.get('border_dash', DEFAULT_OPTIONS['border_dash'])
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
     options['fill_gaps'] = options.get('fill_gaps', DEFAULT_OPTIONS['fill_gaps'])
     options['labels'] = options.get('labels', DEFAULT_OPTIONS['labels'])
-    
+
     options['x_format'] = options.get('x_format', DEFAULT_OPTIONS['x_format'])
     options['y_format'] = options.get('y_format', DEFAULT_OPTIONS['y_format'])
-    
+
     data = include_colors(data, options)
     data = include_border_dash(data, options)
     data = include_point_radius(data, options)
@@ -64,11 +67,19 @@ def include_point_radius(data: dict, options: dict) -> dict:
     return data
 
 
-def _get_scale_type(data: dict, axis: Literal['x', 'y']) -> Literal['linear', 'category']:
+def _get_scale_type(data: dict, axis: Literal['x', 'y'], caller: str) -> Literal['linear', 'category']:
+    if caller == 'line_chart':
+        for trace_data in data.values():
+            data = trace_data['data']
+            if axis == 'x':
+                if not all(val is None or isinstance(val, (int, float, np.number)) for val in data.keys()):
+                    return 'category'
+            else:
+                if not all(val is None or isinstance(val, (int, float, np.number)) for val in data.values()):
+                    return 'category'
+        return 'linear'
+    
     for trace_data in data.values():
-        if axis not in trace_data:
-            return 'linear'
         if not all(isinstance(val, (int, float, np.number)) for val in trace_data[axis]):
             return 'category'
     return 'linear'
-

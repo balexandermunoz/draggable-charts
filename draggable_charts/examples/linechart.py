@@ -6,10 +6,13 @@ from draggable_charts import line_chart
 
 st.header("Line chart")
 initial_data = pd.DataFrame({
+    "index": [2020 + i for i in range(1, 11)],
     "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
     "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -50, -100]
 })
+initial_data = initial_data.set_index("index")
+initial_data.index = initial_data.index.astype(str)
 
 plot_options = {
     "title": "My Plot", # Default: No title
