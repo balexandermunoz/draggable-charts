@@ -88,7 +88,7 @@ class LineChart extends StreamlitComponentBase {
       const xLabel = this.state.chartData.labels[pointIndex]
       const yValue = chart.data.datasets[datasetIndex].data[pointIndex]
 
-      this.state.originalData[datasetLabel][xLabel] = yValue
+      this.state.originalData[datasetLabel]["data"][xLabel] = yValue
       this.setState({ activePoint: null })
       this.togglePan(true)
       Streamlit.setComponentValue(this.state.originalData)

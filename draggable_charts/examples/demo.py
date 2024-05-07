@@ -36,7 +36,7 @@ new_data
 st.subheader("Default")
 series_data = pd.Series([1, 2, 3, 4, 5, np.nan, 7, 8, 9, 10])
 new_series_data = line_chart(data=series_data)
-# new_series_data
+new_series_data
 
 st.header("Scatter chart")
 st.subheader("Numerical")

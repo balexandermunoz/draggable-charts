@@ -89,10 +89,13 @@ def transform_data(data) -> dict:
         dict_data = {data.name: data.replace({np.nan: None}).to_dict()}
     elif isinstance(data, pd.DataFrame):
         dict_data = data.replace({np.nan: None}).to_dict()
+    dict_data = {key: {"data": val} for key, val in dict_data.items()}
     return dict_data
 
 
 def postprocess_data(data, new_data) -> pd.DataFrame:
+    if not isinstance(new_data, pd.Series) and "data" in new_data[list(new_data.keys())[0]]:
+        new_data = {key: val["data"] for key, val in new_data.items()}
     if isinstance(data, pd.Series) and isinstance(new_data, pd.Series):
         return pd.Series(new_data)
     elif isinstance(data, pd.Series):
