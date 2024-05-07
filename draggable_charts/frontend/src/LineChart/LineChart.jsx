@@ -67,8 +67,11 @@ class LineChart extends StreamlitComponentBase {
       const chartArea = chart.chartArea
       const yAxis = chart.scales.y
       const yValue = calculateNewYValue(position, chartArea, yAxis)
+      const pointIndex = this.state.activePoint.index
+      const xLabel = this.state.chartData.labels[pointIndex]
+
       chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
+        xLabel
       ] = yValue
       chart.update("none")
     }
@@ -81,7 +84,7 @@ class LineChart extends StreamlitComponentBase {
       const pointIndex = this.state.activePoint.index
       const datasetLabel = chart.data.datasets[datasetIndex].label
       const xLabel = this.state.chartData.labels[pointIndex]
-      const yValue = chart.data.datasets[datasetIndex].data[pointIndex]
+      const yValue = chart.data.datasets[datasetIndex].data[xLabel]
 
       this.state.originalData[datasetLabel]["data"][xLabel] = yValue
       this.setState({ activePoint: null })

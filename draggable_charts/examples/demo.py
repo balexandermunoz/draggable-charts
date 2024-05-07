@@ -90,7 +90,7 @@ new_data = bezier_chart(data, t=0.5, options={
     "colors": ['blue', 'red']
 }
 )
-# new_data
+new_data
 
 st.subheader("Cubic Bezier")
 data = {
@@ -107,4 +107,4 @@ new_data = cubic_bezier_chart(
         "labels": {"trace 1": "Custom label", "trace 2": "Custom 2", "trace 2 (bezier)": "Hola"}
     }
 )
-# new_data
+new_data
