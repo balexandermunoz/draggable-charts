@@ -17,6 +17,8 @@ DEFAULT_OPTIONS = {
     "point_radius": [3],
     "fill_gaps": False,
     "labels": {},
+    "x_format": True,
+    "y_format": True,
 }
 
 
@@ -34,6 +36,9 @@ def set_options(data: dict, options: dict) -> dict:
     options['point_radius'] = options.get('point_radius', DEFAULT_OPTIONS['point_radius'])
     options['fill_gaps'] = options.get('fill_gaps', DEFAULT_OPTIONS['fill_gaps'])
     options['labels'] = options.get('labels', DEFAULT_OPTIONS['labels'])
+    
+    options['x_format'] = options.get('x_format', DEFAULT_OPTIONS['x_format'])
+    options['y_format'] = options.get('y_format', DEFAULT_OPTIONS['y_format'])
     
     data = include_colors(data, options)
     data = include_border_dash(data, options)

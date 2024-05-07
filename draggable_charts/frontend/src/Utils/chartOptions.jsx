@@ -99,11 +99,11 @@ function createLegendOptions(options) {
   }
 }
 
-function formatTickValue(val, index, options) {
-  if (options.x_type === "linear") {
-    return millify(val);
+function formatTickValue(val, format) {
+  if (format) {
+    return millify(val)
   }
-  return this.getLabelForValue(val);
+  return this.getLabelForValue(val)
 }
 
 function createScalesOptions(options, theme) {
@@ -111,8 +111,9 @@ function createScalesOptions(options, theme) {
     display: true,
     type: options.x_type,
     ticks: {
-      callback: function(val, index) {
-        return formatTickValue.call(this, val, index, options);
+      callback: function (val, index) {
+        const shouldFormat = options.x_type === "linear" && options.x_format
+        return formatTickValue.call(this, val, shouldFormat)
       },
     },
     title: {
@@ -134,8 +135,9 @@ function createScalesOptions(options, theme) {
     display: true,
     type: options.y_type,
     ticks: {
-      callback: function(val, index) {
-        return formatTickValue.call(this, val, index, options);
+      callback: function (val, index) {
+        const shouldFormat = options.y_type === "linear" && options.y_format
+        return formatTickValue.call(this, val, shouldFormat)
       },
     },
     title: {
