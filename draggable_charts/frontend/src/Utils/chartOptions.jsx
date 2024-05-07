@@ -150,6 +150,9 @@ function createTooltipOptions(options, theme) {
     },
     callbacks: {
       title: function (data) {
+        if (data.length === 0) {
+          return ""
+        }
         const label = data[0].dataset.label
         if (options.labels.hasOwnProperty(label)) {
           return `${options.labels[label]}`
