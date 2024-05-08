@@ -1,5 +1,5 @@
 import { Chart } from "chart.js"
-import millify from "millify"
+import { formatPrefix } from "https://cdn.skypack.dev/d3-format@3"
 
 export function createOptions(options, theme) {
   return {
@@ -101,7 +101,8 @@ function createLegendOptions(options) {
 
 function formatTickValue(val, format) {
   if (format) {
-    return millify(val)
+    const f = formatPrefix(",.0", val);
+    return f(val)
   }
   return this.getLabelForValue(val)
 }
