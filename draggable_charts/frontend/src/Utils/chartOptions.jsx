@@ -181,13 +181,13 @@ function createTooltipOptions(options, theme) {
         return `${label}`
       },
       label: function (event) {
-        if (!event.formattedValue.includes(',')) {
+        if (!event.formattedValue.includes(",")) {
           // Line chart
           let Xvalue = event.label
           let Yvalue = event.formattedValue
           return `${Xvalue}, ${Yvalue}`
         }
-        let [Xvalue, Yvalue] = event.formattedValue.slice(1, -1).split(', ');
+        let [Xvalue, Yvalue] = event.formattedValue.slice(1, -1).split(", ")
         return `${Xvalue}, ${Yvalue}`
       },
     },
