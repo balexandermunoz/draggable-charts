@@ -36,7 +36,7 @@ Displays a scatter chart with draggable points. Axes can be categorical or numer
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
     }`
-- `options` (`dict`): A dictionary of options for the chart.
+- `options` (`dict`): A dictionary of options for the chart. See [Options](#options) for more details.
 
 - `on_change` (`Callable`, optional): A callback function that is called with the new data of the chart after user interaction.
 
@@ -57,7 +57,7 @@ Displays a quadratic Bezier chart with draggable points to adjust the curvature 
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
     }`
-- `options` (`dict`): A dictionary of options for the chart.
+- `options` (`dict`): A dictionary of options for the chart. See [Options](#options) for more details.
 
 - `on_change` (`Callable`, optional): A callback function that is called with the new data of the chart after user interaction.
 
@@ -77,7 +77,7 @@ Displays a cubic Bezier chart with draggable points to adjust the curvature with
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
     }`
-- `options` (`dict`): A dictionary of options for the chart.
+- `options` (`dict`): A dictionary of options for the chart. See [Options](#options) for more details.
 
 - `on_change` (`Callable`, optional): A callback function that is called with the new data of the chart after user interaction.
 
