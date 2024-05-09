@@ -181,7 +181,6 @@ function createTooltipOptions(options, theme) {
         return `${label}`
       },
       label: function (event) {
-        console.log(event)
         if (!event.formattedValue.includes(',')) {
           // Line chart
           let Xvalue = event.label
