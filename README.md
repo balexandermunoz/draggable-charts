@@ -12,10 +12,10 @@ pip install draggable-charts
 ## Usage
 
 ## Line Chart:
-
+Displays a line chart with draggable points in one axis.
 - `data` (`pd.Series`, `pd.DataFrame`): The data to display in the chart. Index is always X values and columns are Y values. Columns should have only numeric values. Series.name is the trace name. If a DataFrame is provided, the column names are the trace names.
 
-- `options` (`dict[str: any]`, optional): A dictionary of options for the chart.
+- `options` (`dict[str: any]`, optional): A dictionary of options for the chart. See [Options](#options) for more details.
 
 - `on_change` (`Callable`, optional): A callback function that is called with the new data of the chart after user interaction.
 
@@ -31,7 +31,7 @@ pip install draggable-charts
 
 
 ## Scatter Chart:
-
+Displays a scatter chart with draggable points. Axes can be categorical or numerical.
 - `data` (`dict`): The data to display in the chart. Control points will be added in between. It has the form 
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
@@ -52,6 +52,7 @@ pip install draggable-charts
 
 
 ## Bezier Chart:
+Displays a quadratic Bezier chart with draggable points to adjust the curvature with one control point per each two data points.
 - `data` (`dict`): The data to display in the chart. It has the form 
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
@@ -68,9 +69,10 @@ pip install draggable-charts
 
 #### Returns
 
-- `new_data` (`dict[str, dict]`): The data of the chart after user interaction. The format is the same as the input format.
+- `new_data` (`dict[str, dict]`): The data of the interpolated Bezier curve after user interaction. The format is the same as the input format.
 
 ## Cuadratic Bezier Chart:
+Displays a cubic Bezier chart with draggable points to adjust the curvature with two control point per each two data points. The movement between control points is attached to create a smooth interaction.
 - `data` (`dict`): The data to display in the chart. It has the form 
 `{"trace 1": {"x": [1,2,3], "y": [1, 4, 9]},
     "trace 2": ...
@@ -87,11 +89,11 @@ pip install draggable-charts
 
 #### Returns
 
-- `new_data` (`dict[str, dict]`): The data of the chart after user interaction. The format is the same as the input format.
+- `new_data` (`dict[str, dict]`): The data of the interpolated Bezier curve after user interaction. The format is the same as the input format.
 
 
 
-## options:
+## Options:
 All options are sent in the same dictionary `options`. There are common options that applies to the canvas, and specific options applied to traces. Canvas options are:
 
 ### Canvas options:
