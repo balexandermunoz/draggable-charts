@@ -9,11 +9,13 @@ st.subheader("Custom")
 st.write("Drag the points vertically")
 initial_data = pd.DataFrame({
     "index": [2021, 2022, 2023, 2024, 2025, 2026, 2027, 2028, 2029, 2030],
-    "Col1": [1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000],
-    "Col2": [1000, 4000, 9000, 16000, np.nan, 36000, 49000, 64000, 81000, 200000],
-    "Col3": [-1000, -2000, -3000, -4000, -5000, -6000, -7000, -8000, -50000, -100000]
+    "Col1": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+    "Col2": [1, 4, 9, 16, np.nan, 36, 49, 64, 81, 200],
+    "Col3": [-1, -2, -3, -4, -5, -6, -7, -8, -50, -100]
 })
 initial_data = initial_data.set_index("index")
+initial_data.index = initial_data.index.astype(str)
+initial_data = initial_data.mul(0.001)
 
 plot_options = {
     "title": "My Plot", # Default: No title
