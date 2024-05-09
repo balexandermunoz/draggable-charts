@@ -18,8 +18,8 @@ DEFAULT_OPTIONS = {
     "point_radius": [3],
     "fill_gaps": False,
     "labels": {},
-    "x_format": True,
-    "y_format": True,
+    "x_format": ".2~s",
+    "y_format": ".2~s",
 }
 
 
