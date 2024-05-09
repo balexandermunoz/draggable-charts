@@ -1,3 +1,4 @@
+bezier_interpolation==0.0.2
 numpy==1.26.4
 pandas==2.2.2
 playwright==1.43.0
