@@ -4,6 +4,7 @@ import numpy as np
 import pandas as pd
 
 from ..utils import component, get_func_name, register
+from ..utils.data_validation import validate_line_data
 from ..utils.options import set_options
 
 
@@ -52,7 +53,7 @@ def line_chart(
         If the data is not a pandas Series, DataFrame, or a dictionary, or if the DataFrame does not have only numeric columns.
     """
     register(key, on_change, args, kwargs)
-    validate_data(data)
+    validate_line_data(data)
     dict_data = transform_data(data)
     dict_data, options = set_options(dict_data, options)
     new_data = component(
@@ -63,23 +64,6 @@ def line_chart(
     )
     new_df = postprocess_data(data, new_data)
     return new_df
-
-
-def validate_data(data):
-    if isinstance(data, pd.Series):
-        return
-    elif isinstance(data, pd.DataFrame):
-        non_numeric_columns = data.select_dtypes(exclude='number').columns
-        if len(non_numeric_columns) > 0:
-            raise ValueError(
-                f"The DataFrame contains non-numeric columns: {list(non_numeric_columns)}. "
-                "Expected a DataFrame with only numeric columns."
-            )
-    else:
-        raise ValueError(
-            f"Invalid data type: {type(data).__name__}. "
-            "Expected a pandas Series or DataFrame."
-        )
 
 
 def transform_data(data) -> dict:
