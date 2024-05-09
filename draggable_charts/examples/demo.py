@@ -15,7 +15,7 @@ initial_data = pd.DataFrame({
 })
 initial_data = initial_data.set_index("index")
 initial_data.index = initial_data.index.astype(str)
-initial_data = initial_data.mul(0.001)
+initial_data = initial_data.mul(0.0001)
 
 plot_options = {
     "title": "My Plot", # Default: No title
@@ -32,8 +32,8 @@ plot_options = {
     'labels': {"Col1": "Custom label", "Col2": "Custom 2"},  # default: {}
     "point_radius": [3, 5, 2], # default: [3]
     "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)]
-    "x_format": False, # default True
-    "y_format": True, # default True
+    "x_format": None, # default ".2~s". Check https://d3js.org/d3-format#locale_format
+    "y_format": ".2~s", # default ".2~s"
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
 new_data
