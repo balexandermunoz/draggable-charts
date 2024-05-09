@@ -1,5 +1,5 @@
 import { Chart } from "chart.js"
-import { formatPrefix } from "https://cdn.skypack.dev/d3-format@3"
+import { format as d3Format } from "https://cdn.skypack.dev/d3-format@3"
 
 export function createOptions(options, theme) {
   return {
@@ -101,8 +101,7 @@ function createLegendOptions(options) {
 
 function formatTickValue(val, format) {
   if (format) {
-    const f = formatPrefix(",.0", val)
-    return f(val)
+    return d3Format(format)(val)
   }
   return this.getLabelForValue(val)
 }
