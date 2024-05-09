@@ -101,7 +101,7 @@ function createLegendOptions(options) {
 
 function formatTickValue(val, format) {
   if (format) {
-    const f = formatPrefix(",.0", val);
+    const f = formatPrefix(",.0", val)
     return f(val)
   }
   return this.getLabelForValue(val)
@@ -181,8 +181,14 @@ function createTooltipOptions(options, theme) {
         return `${label}`
       },
       label: function (event) {
-        const Xvalue = event.parsed.x.toFixed(2)
-        const Yvalue = event.parsed.y.toFixed(2)
+        console.log(event)
+        if (!event.formattedValue.includes(',')) {
+          // Line chart
+          let Xvalue = event.label
+          let Yvalue = event.formattedValue
+          return `${Xvalue}, ${Yvalue}`
+        }
+        let [Xvalue, Yvalue] = event.formattedValue.slice(1, -1).split(', ');
         return `${Xvalue}, ${Yvalue}`
       },
     },
