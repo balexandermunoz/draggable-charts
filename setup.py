@@ -7,7 +7,7 @@ long_description = (this_directory / "README.md").read_text()
 
 setuptools.setup(
     name="draggable-charts",
-    version="1.2.8",
+    version="1.2.10",
     author="Brayan Munoz",
     author_email="balexander.munoz@udea.edu.co",
     description="A Streamlit component library for interactive charts in chartjs. Draggable line, scatter, and bezier charts. The updated data of the chart is returned after user interaction.",
@@ -20,6 +20,7 @@ setuptools.setup(
     python_requires=">=3.7",
     install_requires=[
         "streamlit >= 0.63",
+        "bezier-interpolation >= 0.0.2",
     ],
     extras_require={
         "devel": [
