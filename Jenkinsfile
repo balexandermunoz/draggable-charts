@@ -103,7 +103,7 @@ stage('Build tarball') {
       steps {
         sh 'rm -fr dist/'
         sh 'python3.9 --version'
-        sh "sed -i -e 's/1.0/2.0.${env.BUILD_NUMBER}/g' setup.py"
+        sh "sed -i -e 's/1.0/1.0.${env.BUILD_NUMBER}/g' setup.py"
         sh 'python3.9 -m pip install --user --upgrade setuptools wheel'
         sh 'python3.9 setup.py sdist bdist_wheel'
       }
