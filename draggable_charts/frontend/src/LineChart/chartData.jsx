@@ -12,6 +12,11 @@ export function createChartData(data, options) {
       borderColor: colData.color,
       pointRadius: colData.point_radius,
       borderDash: colData.border_dash,
+      fill: {
+        target: colData.fill,
+        above: 'rgb(128, 128, 128, 0.2)',
+        below: 'rgb(128, 128, 128, 0.2)',
+      },
     }
   })
 

@@ -20,6 +20,7 @@ DEFAULT_OPTIONS = {
     "labels": {},
     "x_format": None,
     "y_format": ".2~s",
+    "fill": [False],
 }
 
 
@@ -43,9 +44,12 @@ def set_options(data: dict, options: dict) -> dict:
     options['x_format'] = options.get('x_format', DEFAULT_OPTIONS['x_format'])
     options['y_format'] = options.get('y_format', DEFAULT_OPTIONS['y_format'])
 
+    options['fill'] = options.get('fill', DEFAULT_OPTIONS['fill'])
+    
     data = include_colors(data, options)
     data = include_border_dash(data, options)
     data = include_point_radius(data, options)
+    data = include_fill(data, options)
     return data, options
 
 
@@ -67,6 +71,12 @@ def include_point_radius(data: dict, options: dict) -> dict:
     return data
 
 
+def include_fill(data: dict, options: dict) -> dict:
+    for i, trace_data in enumerate(data.values()):
+        trace_data['fill'] = options['fill'][i % len(options['fill'])]
+    return data
+
+
 def _get_scale_type(data: dict, axis: Literal['x', 'y'], caller: str) -> Literal['linear', 'category']:
     if caller == 'line_chart':
         for trace_data in data.values():
@@ -78,7 +88,7 @@ def _get_scale_type(data: dict, axis: Literal['x', 'y'], caller: str) -> Literal
                 if not all(val is None or isinstance(val, (int, float, np.number)) for val in data.values()):
                     return 'category'
         return 'linear'
-    
+
     for trace_data in data.values():
         if not all(isinstance(val, (int, float, np.number)) for val in trace_data[axis]):
             return 'category'
