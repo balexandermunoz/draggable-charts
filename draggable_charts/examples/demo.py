@@ -34,7 +34,7 @@ plot_options = {
     "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)]
     "x_format": None, # default ".2~s". Check https://d3js.org/d3-format#locale_format
     "y_format": ".2~s", # default ".2~s",
-    "fill": [False, 2, False] # default: [False].
+    "fill": [False, 2, False] # default: [False]. Needs show_line=True. To fill from one trace to another, set the index of the trace to fill.
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")
 new_data

@@ -107,7 +107,7 @@ All options are sent in the same dictionary `options`. There are common options 
   - `'legend_align'`: The alignment of the legend. It can be `'start'`, `'center'`, or `'end'`.
   If not provided, default options will be used.
   - `'labels'`: Default {}. Dictionary with a map from original labels to custom labels.
-  - `'x_format'`: Default None. A printf-style format string controlling how the canvas should display X numeric ticks. Check: https://d3js.org/d3-format#locale_format
+  - `'x_format'`: Default None. A printf-style format string controlling how the canvas should display X numeric ticks. Check [D3 Format](https://d3js.org/d3-format#locale_format).
   - `'y_format'`: Default `".2~s"`. A printf-style format string controlling how the canvas should display Y numeric ticks.
 
   ### Chart options:
@@ -118,6 +118,7 @@ All options are sent in the same dictionary `options`. There are common options 
   - `'fixed_lines'`: List of column names that cannot be dragged. Default is an empty list.
   - `'border_dash'`: Default [(0,0)]. A list of tuples with length and spacing of dashes per every trace. It will repeat if more traces than tuples are provided.
   - `'point_radius'`: Default [3]. The radius of the point shape per trace. If set to 0, the point is not rendered. 
+  - `'fill'`: Default [False]. Boolean or int. Fill area between one dataset and origin or one dataset to another. Check [Fill Options](https://www.chartjs.org/docs/latest/charts/area.html#filling-modes).
 
 
 ## Example
