@@ -180,7 +180,7 @@ function createTooltipOptions(options, theme) {
         return `${label}`
       },
       label: function (event) {
-        if (!event.formattedValue.includes(",")) {
+        if (!event.formattedValue.includes(", ")) {
           // Line chart
           let Xvalue = event.label
           let Yvalue = event.formattedValue
