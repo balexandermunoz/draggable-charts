@@ -98,6 +98,14 @@ stage('Generate Version')
         }
     }
 
+stage('Build frontend') {
+      steps {
+          dir('draggable_charts/frontend'){
+          sh 'npm install'
+          sh 'npm run build'
+        }
+      }
+    }
 
 stage('Build tarball') {
       steps {
