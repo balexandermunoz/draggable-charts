@@ -118,6 +118,7 @@ All options are sent in the same dictionary `options`. There are common options 
   - `'fixed_lines'`: List of column names that cannot be dragged. Default is an empty list.
   - `'border_dash'`: Default [(0,0)]. A list of tuples with length and spacing of dashes per every trace. It will repeat if more traces than tuples are provided.
   - `'point_radius'`: Default [3]. The radius of the point shape per trace. If set to 0, the point is not rendered. 
+  - `'hide_legends'`: Default []. List of names to be hidden in the legend.
 
 
 ## Example
