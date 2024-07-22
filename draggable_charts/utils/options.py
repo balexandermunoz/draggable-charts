@@ -20,6 +20,7 @@ DEFAULT_OPTIONS = {
     "labels": {},
     "x_format": None,
     "y_format": ".2~s",
+    "hide_legends": [],
 }
 
 
@@ -42,6 +43,8 @@ def set_options(data: dict, options: dict) -> dict:
 
     options['x_format'] = options.get('x_format', DEFAULT_OPTIONS['x_format'])
     options['y_format'] = options.get('y_format', DEFAULT_OPTIONS['y_format'])
+    
+    options['hide_legends'] = options.get('hide_legends', DEFAULT_OPTIONS['hide_legends'])
 
     data = include_colors(data, options)
     data = include_border_dash(data, options)

@@ -72,6 +72,13 @@ function createLegendOptions(options) {
       boxWidth: 16,
       boxHeight: 8,
       padding: 8,
+      filter: function (legendItem, chartData) {
+        console.log(legendItem)
+        if (options.hide_legends.includes(legendItem.text)) {
+          return false
+        }
+        return true
+      },
       generateLabels: function (chart) {
         const labels =
           Chart.defaults.plugins.legend.labels.generateLabels(chart)

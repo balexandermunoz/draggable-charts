@@ -30,6 +30,7 @@ plot_options = {
     'fill_gaps': True,  # default: False
     'fixed_lines': ["Col3"],  # default: []
     'labels': {"Col1": "Custom label", "Col2": "Custom 2"},  # default: {}
+    'hide_legends': ["Custom 2"],  # default: []
     "point_radius": [3, 5, 2], # default: [3]
     "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)]
     "x_format": None, # default ".2~s". Check https://d3js.org/d3-format#locale_format
