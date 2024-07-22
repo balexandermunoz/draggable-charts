@@ -5,7 +5,7 @@ Streamlit component that displays a interactive charts with draggable points. Us
 ## Installation instructions
 
 ```sh
-pip install draggable-charts
+pip install draggable-charts --extra-index-url 'https://nexus.mhf.mhc/nexus/repository/plt-analytics-release/simple' --trusted-host 'nexus.mhf.mhc'
 ```
 
 
