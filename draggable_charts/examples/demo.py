@@ -15,7 +15,7 @@ initial_data = pd.DataFrame({
 })
 initial_data = initial_data.set_index("index")
 initial_data.index = initial_data.index.astype(str)
-initial_data = initial_data.mul(0.0001)
+initial_data = initial_data.mul(1000000)
 
 plot_options = {
     "title": "My Plot", # Default: No title
