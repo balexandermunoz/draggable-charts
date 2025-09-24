@@ -100,6 +100,8 @@ All options are sent in the same dictionary `options`. There are common options 
   - `'title'`: The title of the chart.
   - `'x_label'`: Text in x-axis.
   - `'y_label'`: Text in y-axis.
+  - `'x_type'`: `linear` for continuous data, `category` for categorical data, “time” to automatically CONVERT floating values on the x-axis to dates. 1.0 => 1/01/01 (YYYY/MM/DD). If not specified, the code can automatically detect whether the data is linear or categorical.
+  - `'y_type'`: `linear` for continuous data, `category` for categorical data, “time” to automatically CONVERT floating values on the y-axis to dates. 1.0 => 1/01/01 (YYYY/MM/DD). If not specified, the code can automatically detect whether the data is linear or categorical.
   - `'x_grid'`: A boolean indicating whether to display the grid for the x-axis.
   - `'y_grid'`: A boolean indicating whether to display the grid for the y-axis.
   - `'legend'`: A boolean indicating whether to display the legend. If not provided, the legend will be displayed by default.

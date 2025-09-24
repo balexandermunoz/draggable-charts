@@ -106,7 +106,33 @@ function createLegendOptions(options) {
   }
 }
 
-function formatTickValue(val, format) {
+function convertNumericToDate(numericValue) {
+  const year = Math.floor(numericValue)
+  const decimal = numericValue - year
+  
+  // Calculate day of year from decimal (0.0 = Jan 1, 1.0 = Dec 31 next year)
+  const daysInYear = isLeapYear(year) ? 366 : 365
+  const dayOfYear = Math.floor(decimal * daysInYear) + 1
+  
+  // Convert day of year to month/day
+  const date = new Date(year, 0) // January 1st of the year
+  date.setDate(dayOfYear)
+  
+  // Format as YYYY/MM/DD
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  
+  return `${year}/${month}/${day}`
+}
+
+function isLeapYear(year) {
+  return (year % 4 === 0 && year % 100 !== 0) || (year % 400 === 0)
+}
+
+function formatTickValue(val, format, isTimeScale = false) {
+  if (isTimeScale) {
+    return convertNumericToDate(val)
+  }
   if (format) {
     return d3Format(format)(val)
   }
@@ -116,11 +142,12 @@ function formatTickValue(val, format) {
 function createScalesOptions(options, theme) {
   const xScaleOptions = {
     display: true,
-    type: options.x_type,
+    type: options.x_type === "time" ? "linear" : options.x_type,
     ticks: {
       callback: function (val, index) {
+        const isTimeScale = options.x_type === "time"
         const shouldFormat = options.x_type === "linear" && options.x_format
-        return formatTickValue.call(this, val, shouldFormat)
+        return formatTickValue.call(this, val, shouldFormat, isTimeScale)
       },
     },
     title: {
@@ -140,11 +167,12 @@ function createScalesOptions(options, theme) {
 
   const yScaleOptions = {
     display: true,
-    type: options.y_type,
+    type: options.y_type === "time" ? "linear" : options.y_type,
     ticks: {
       callback: function (val, index) {
+        const isTimeScale = options.y_type === "time"
         const shouldFormat = options.y_type === "linear" && options.y_format
-        return formatTickValue.call(this, val, shouldFormat)
+        return formatTickValue.call(this, val, shouldFormat, isTimeScale)
       },
     },
     title: {
@@ -191,9 +219,29 @@ function createTooltipOptions(options, theme) {
           // Line chart
           let Xvalue = event.label
           let Yvalue = event.formattedValue
+          
+          // Convert to date format if using time scales
+          if (options.x_type === "time") {
+            Xvalue = convertNumericToDate(event.parsed.x)
+          }
+          if (options.y_type === "time") {
+            Yvalue = convertNumericToDate(event.parsed.y)
+          }
+          
           return `${Xvalue}, ${Yvalue}`
         }
+        
+        // Scatter chart
         let [Xvalue, Yvalue] = event.formattedValue.slice(1, -1).split(", ")
+        
+        // Convert to date format if using time scales
+        if (options.x_type === "time") {
+          Xvalue = convertNumericToDate(event.parsed.x)
+        }
+        if (options.y_type === "time") {
+          Yvalue = convertNumericToDate(event.parsed.y)
+        }
+        
         return `${Xvalue}, ${Yvalue}`
       },
     },

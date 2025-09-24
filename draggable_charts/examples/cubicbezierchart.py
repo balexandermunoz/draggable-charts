@@ -10,6 +10,7 @@ data = {
 new_data = cubic_bezier_chart(
     data,
     options={
+        "x_type": "time",
         "fixed_lines": ["trace 2"],
     }
 )

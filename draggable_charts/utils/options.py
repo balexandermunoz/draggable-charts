@@ -28,8 +28,11 @@ def set_options(data: dict, options: dict) -> dict:
     caller_name = inspect.stack()[1].function
     if not options:
         options = DEFAULT_OPTIONS.copy()
-    options['x_type'] = _get_scale_type(data, 'x', caller_name)
-    options['y_type'] = _get_scale_type(data, 'y', caller_name)
+    
+    if 'x_type' not in options:
+        options['x_type'] = _get_scale_type(data, 'x', caller_name)
+    if 'y_type' not in options:
+        options['y_type'] = _get_scale_type(data, 'y', caller_name)
 
     options['tension'] = options.get('tension', DEFAULT_OPTIONS['tension'])
     options['show_line'] = options.get('show_line', DEFAULT_OPTIONS['show_line'])
