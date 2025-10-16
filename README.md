@@ -11,6 +11,12 @@ pip install draggable-charts --extra-index-url 'https://nexus.mhf.mhc/nexus/repo
 
 ## Usage
 
+I suggest checking the folder examples and runing 
+```sh
+streamlit run draggable_charts\examples\demo.py
+```
+to see the full list of plots and options in action
+
 ## Line Chart:
 Displays a line chart with draggable points in one axis.
 - `data` (`pd.Series`, `pd.DataFrame`): The data to display in the chart. Index is always X values and columns are Y values. Columns should have only numeric values. Series.name is the trace name. If a DataFrame is provided, the column names are the trace names.
