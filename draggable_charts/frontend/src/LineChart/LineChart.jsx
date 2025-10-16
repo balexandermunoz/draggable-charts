@@ -7,6 +7,11 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewYValue } from "../Utils/handlers"
+import { 
+  storeOriginalShadeValues, 
+  updateShadeLines, 
+  saveShadeData 
+} from "../Utils/shadeHelpers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -16,9 +21,8 @@ class LineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      originalYValue: null,  // Track original Y value for calculating delta
-      originalMinValue: null,  // Track original min value
-      originalMaxValue: null,  // Track original max value
+      originalYValue: null,
+      shadeOriginalValues: null,  // Store original min/max values for shade
       originalData: props.args.data,
       chartData: createChartData(props.args.data, props.args.options.colors),
       options: createOptions(props.args.options, props.theme),
@@ -59,43 +63,24 @@ class LineChart extends StreamlitComponentBase {
         return
       }
       
-      // Store the original Y value for calculating delta
       const chart = this.chartRef.current
       const pointIndex = points[0].index
       const xLabel = this.state.chartData.labels[pointIndex]
       const originalY = chart.data.datasets[points[0].datasetIndex].data[xLabel]
       
-      // Store original min/max values if this line has shade_between configuration
-      let originalMin = null
-      let originalMax = null
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Find and store the original min value
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1) {
-              originalMin = chart.data.datasets[minDatasetIndex].data[xLabel]
-            }
-            
-            // Find and store the original max value
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1) {
-              originalMax = chart.data.datasets[maxDatasetIndex].data[xLabel]
-            }
-          }
-        })
-      }
+      // Store original shade values using helper
+      const shadeValues = storeOriginalShadeValues(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.chartData.labels
+      )
       
       this.setState({ 
         activePoint: points[0],
         originalYValue: originalY,
-        originalMinValue: originalMin,
-        originalMaxValue: originalMax
+        shadeOriginalValues: shadeValues
       })
       this.togglePan(false)
     }
@@ -118,28 +103,18 @@ class LineChart extends StreamlitComponentBase {
       // Update the main line
       chart.data.datasets[this.state.activePoint.datasetIndex].data[xLabel] = newYValue
       
-      // Check if this line has shade_between configuration and update min/max lines
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Update the min line by applying delta to the original min value
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1 && this.state.originalMinValue !== null) {
-              chart.data.datasets[minDatasetIndex].data[xLabel] = this.state.originalMinValue + deltaY
-            }
-            
-            // Update the max line by applying delta to the original max value
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1 && this.state.originalMaxValue !== null) {
-              chart.data.datasets[maxDatasetIndex].data[xLabel] = this.state.originalMaxValue + deltaY
-            }
-          }
-        })
+      // Update shade lines using helper
+      if (this.state.shadeOriginalValues && this.state.shadeOriginalValues.hasShade) {
+        updateShadeLines(
+          chart,
+          datasetLabel,
+          pointIndex,
+          deltaY,
+          this.props.args.options,
+          this.state.chartData.labels,
+          this.state.shadeOriginalValues.minValues,
+          this.state.shadeOriginalValues.maxValues
+        )
       }
       
       chart.update("none")
@@ -158,37 +133,20 @@ class LineChart extends StreamlitComponentBase {
       // Update the main line data
       this.state.originalData[datasetLabel]["data"][xLabel] = yValue
       
-      // Check if this line has shade_between configuration and update min/max lines
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Update the min line data
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1) {
-              const minYValue = chart.data.datasets[minDatasetIndex].data[xLabel]
-              this.state.originalData[config.min]["data"][xLabel] = minYValue
-            }
-            
-            // Update the max line data
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1) {
-              const maxYValue = chart.data.datasets[maxDatasetIndex].data[xLabel]
-              this.state.originalData[config.max]["data"][xLabel] = maxYValue
-            }
-          }
-        })
-      }
+      // Save shade data using helper
+      saveShadeData(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.chartData.labels,
+        this.state.originalData
+      )
       
       this.setState({ 
         activePoint: null,
         originalYValue: null,
-        originalMinValue: null,
-        originalMaxValue: null
+        shadeOriginalValues: null
       })
       this.togglePan(true)
       Streamlit.setComponentValue(this.state.originalData)

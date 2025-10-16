@@ -8,6 +8,11 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
+import { 
+  storeOriginalShadeValues, 
+  updateShadeScatter, 
+  saveShadeScatterData 
+} from "../Utils/shadeHelpers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -17,12 +22,9 @@ class ScatterChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
-      originalXValue: null,  // Track original X value for calculating delta
-      originalYValue: null,  // Track original Y value for calculating delta
-      originalMinX: null,    // Track original min X value
-      originalMinY: null,    // Track original min Y value
-      originalMaxX: null,    // Track original max X value
-      originalMaxY: null,    // Track original max Y value
+      originalXValue: null,
+      originalYValue: null,
+      shadeOriginalValues: null,  // Store original min/max values for shade
       originalData: props.args.data,
       chartData: createChartData(props.args.data, props.args.options.colors),
       options: createOptions(props.args.options, props.theme),
@@ -63,50 +65,25 @@ class ScatterChart extends StreamlitComponentBase {
         return
       }
       
-      // Store the original X and Y values for calculating delta
       const chart = this.chartRef.current
       const pointIndex = points[0].index
       const originalX = chart.data.datasets[points[0].datasetIndex].data[pointIndex].x
       const originalY = chart.data.datasets[points[0].datasetIndex].data[pointIndex].y
       
-      // Store original min/max values if this line has shade_between configuration
-      let originalMinX = null
-      let originalMinY = null
-      let originalMaxX = null
-      let originalMaxY = null
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Find and store the original min values
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1) {
-              originalMinX = chart.data.datasets[minDatasetIndex].data[pointIndex].x
-              originalMinY = chart.data.datasets[minDatasetIndex].data[pointIndex].y
-            }
-            
-            // Find and store the original max values
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1) {
-              originalMaxX = chart.data.datasets[maxDatasetIndex].data[pointIndex].x
-              originalMaxY = chart.data.datasets[maxDatasetIndex].data[pointIndex].y
-            }
-          }
-        })
-      }
+      // Store original shade values using helper (pass null for labels since scatter doesn't use them)
+      const shadeValues = storeOriginalShadeValues(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        null  // Scatter chart doesn't use labels
+      )
       
       this.setState({ 
         activePoint: points[0],
         originalXValue: originalX,
         originalYValue: originalY,
-        originalMinX: originalMinX,
-        originalMinY: originalMinY,
-        originalMaxX: originalMaxX,
-        originalMaxY: originalMaxY
+        shadeOriginalValues: shadeValues
       })
       this.togglePan(false)
     }
@@ -142,30 +119,18 @@ class ScatterChart extends StreamlitComponentBase {
       chart.data.datasets[this.state.activePoint.datasetIndex].data[pointIndex].y = newYValue
       chart.data.datasets[this.state.activePoint.datasetIndex].data[pointIndex].x = newXValue
 
-      // Check if this line has shade_between configuration and update min/max lines
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Update the min line by applying deltas to the original min values
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1 && this.state.originalMinX !== null && this.state.originalMinY !== null) {
-              chart.data.datasets[minDatasetIndex].data[pointIndex].x = this.state.originalMinX + deltaX
-              chart.data.datasets[minDatasetIndex].data[pointIndex].y = this.state.originalMinY + deltaY
-            }
-            
-            // Update the max line by applying deltas to the original max values
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1 && this.state.originalMaxX !== null && this.state.originalMaxY !== null) {
-              chart.data.datasets[maxDatasetIndex].data[pointIndex].x = this.state.originalMaxX + deltaX
-              chart.data.datasets[maxDatasetIndex].data[pointIndex].y = this.state.originalMaxY + deltaY
-            }
-          }
-        })
+      // Update shade scatter using helper
+      if (this.state.shadeOriginalValues && this.state.shadeOriginalValues.hasShade) {
+        updateShadeScatter(
+          chart,
+          datasetLabel,
+          pointIndex,
+          deltaX,
+          deltaY,
+          this.props.args.options,
+          this.state.shadeOriginalValues.minValues,
+          this.state.shadeOriginalValues.maxValues
+        )
       }
 
       chart.update("none")
@@ -184,35 +149,14 @@ class ScatterChart extends StreamlitComponentBase {
       this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
       this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
       
-      // Check if this line has shade_between configuration and update min/max lines
-      const shadeBetween = this.props.args.options.shade_between
-      if (shadeBetween) {
-        Object.entries(shadeBetween).forEach(([targetLine, config]) => {
-          if (datasetLabel === targetLine) {
-            // Update the min line data
-            const minDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.min
-            )
-            if (minDatasetIndex !== -1) {
-              const minXValue = chart.data.datasets[minDatasetIndex].data[pointIndex].x
-              const minYValue = chart.data.datasets[minDatasetIndex].data[pointIndex].y
-              this.state.originalData[config.min]["x"][pointIndex] = minXValue
-              this.state.originalData[config.min]["y"][pointIndex] = minYValue
-            }
-            
-            // Update the max line data
-            const maxDatasetIndex = chart.data.datasets.findIndex(
-              ds => ds.label === config.max
-            )
-            if (maxDatasetIndex !== -1) {
-              const maxXValue = chart.data.datasets[maxDatasetIndex].data[pointIndex].x
-              const maxYValue = chart.data.datasets[maxDatasetIndex].data[pointIndex].y
-              this.state.originalData[config.max]["x"][pointIndex] = maxXValue
-              this.state.originalData[config.max]["y"][pointIndex] = maxYValue
-            }
-          }
-        })
-      }
+      // Save shade scatter data using helper
+      saveShadeScatterData(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.originalData
+      )
       
       Streamlit.setComponentValue(this.state.originalData)
 
@@ -220,10 +164,7 @@ class ScatterChart extends StreamlitComponentBase {
         activePoint: null,
         originalXValue: null,
         originalYValue: null,
-        originalMinX: null,
-        originalMinY: null,
-        originalMaxX: null,
-        originalMaxY: null
+        shadeOriginalValues: null
       })
       this.togglePan(true)
     }
