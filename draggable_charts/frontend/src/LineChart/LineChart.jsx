@@ -7,6 +7,11 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewYValue } from "../Utils/handlers"
+import { 
+  storeOriginalShadeValues, 
+  updateShadeLines, 
+  saveShadeData 
+} from "../Utils/shadeHelpers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -16,6 +21,8 @@ class LineChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
+      originalYValue: null,
+      shadeOriginalValues: null,  // Store original min/max values for shade
       originalData: props.args.data,
       chartData: createChartData(props.args.data, props.args.options.colors),
       options: createOptions(props.args.options, props.theme),
@@ -55,7 +62,26 @@ class LineChart extends StreamlitComponentBase {
         // This line is fixed, so don't allow it to be moved
         return
       }
-      this.setState({ activePoint: points[0] })
+      
+      const chart = this.chartRef.current
+      const pointIndex = points[0].index
+      const xLabel = this.state.chartData.labels[pointIndex]
+      const originalY = chart.data.datasets[points[0].datasetIndex].data[xLabel]
+      
+      // Store original shade values using helper
+      const shadeValues = storeOriginalShadeValues(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.chartData.labels
+      )
+      
+      this.setState({ 
+        activePoint: points[0],
+        originalYValue: originalY,
+        shadeOriginalValues: shadeValues
+      })
       this.togglePan(false)
     }
   }
@@ -66,13 +92,31 @@ class LineChart extends StreamlitComponentBase {
       const position = getRelativePosition(event, this.chartRef.current)
       const chartArea = chart.chartArea
       const yAxis = chart.scales.y
-      const yValue = calculateNewYValue(position, chartArea, yAxis)
+      const newYValue = calculateNewYValue(position, chartArea, yAxis)
       const pointIndex = this.state.activePoint.index
       const xLabel = this.state.chartData.labels[pointIndex]
+      const datasetLabel = chart.data.datasets[this.state.activePoint.datasetIndex].label
+      
+      // Calculate the delta (change in Y value) from the original position
+      const deltaY = newYValue - this.state.originalYValue
 
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        xLabel
-      ] = yValue
+      // Update the main line
+      chart.data.datasets[this.state.activePoint.datasetIndex].data[xLabel] = newYValue
+      
+      // Update shade lines using helper
+      if (this.state.shadeOriginalValues && this.state.shadeOriginalValues.hasShade) {
+        updateShadeLines(
+          chart,
+          datasetLabel,
+          pointIndex,
+          deltaY,
+          this.props.args.options,
+          this.state.chartData.labels,
+          this.state.shadeOriginalValues.minValues,
+          this.state.shadeOriginalValues.maxValues
+        )
+      }
+      
       chart.update("none")
     }
   }
@@ -86,8 +130,24 @@ class LineChart extends StreamlitComponentBase {
       const xLabel = this.state.chartData.labels[pointIndex]
       const yValue = chart.data.datasets[datasetIndex].data[xLabel]
 
+      // Update the main line data
       this.state.originalData[datasetLabel]["data"][xLabel] = yValue
-      this.setState({ activePoint: null })
+      
+      // Save shade data using helper
+      saveShadeData(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.chartData.labels,
+        this.state.originalData
+      )
+      
+      this.setState({ 
+        activePoint: null,
+        originalYValue: null,
+        shadeOriginalValues: null
+      })
       this.togglePan(true)
       Streamlit.setComponentValue(this.state.originalData)
     }

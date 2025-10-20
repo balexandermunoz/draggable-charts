@@ -8,6 +8,11 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
+import { 
+  storeOriginalShadeValues, 
+  updateShadeScatter, 
+  saveShadeScatterData 
+} from "../Utils/shadeHelpers"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -17,6 +22,9 @@ class ScatterChart extends StreamlitComponentBase {
     this.chartRef = React.createRef()
     this.state = {
       activePoint: null,
+      originalXValue: null,
+      originalYValue: null,
+      shadeOriginalValues: null,  // Store original min/max values for shade
       originalData: props.args.data,
       chartData: createChartData(props.args.data, props.args.options.colors),
       options: createOptions(props.args.options, props.theme),
@@ -56,7 +64,27 @@ class ScatterChart extends StreamlitComponentBase {
         // This line is fixed, so don't allow it to be moved
         return
       }
-      this.setState({ activePoint: points[0] })
+      
+      const chart = this.chartRef.current
+      const pointIndex = points[0].index
+      const originalX = chart.data.datasets[points[0].datasetIndex].data[pointIndex].x
+      const originalY = chart.data.datasets[points[0].datasetIndex].data[pointIndex].y
+      
+      // Store original shade values using helper (pass null for labels since scatter doesn't use them)
+      const shadeValues = storeOriginalShadeValues(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        null  // Scatter chart doesn't use labels
+      )
+      
+      this.setState({ 
+        activePoint: points[0],
+        originalXValue: originalX,
+        originalYValue: originalY,
+        shadeOriginalValues: shadeValues
+      })
       this.togglePan(false)
     }
   }
@@ -66,6 +94,8 @@ class ScatterChart extends StreamlitComponentBase {
       const chart = this.chartRef.current
       const position = getRelativePosition(event, this.chartRef.current)
       const chartArea = chart.chartArea
+      const pointIndex = this.state.activePoint.index
+      const datasetLabel = chart.data.datasets[this.state.activePoint.datasetIndex].label
 
       const newYValue = calculateNewYValue(
         position,
@@ -80,13 +110,28 @@ class ScatterChart extends StreamlitComponentBase {
         chart.scales.x,
         this.props.args.options.x_type
       )
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
-      ].y = newYValue
+      
+      // Calculate the deltas from the original positions
+      const deltaX = newXValue - this.state.originalXValue
+      const deltaY = newYValue - this.state.originalYValue
 
-      chart.data.datasets[this.state.activePoint.datasetIndex].data[
-        this.state.activePoint.index
-      ].x = newXValue
+      // Update the main point
+      chart.data.datasets[this.state.activePoint.datasetIndex].data[pointIndex].y = newYValue
+      chart.data.datasets[this.state.activePoint.datasetIndex].data[pointIndex].x = newXValue
+
+      // Update shade scatter using helper
+      if (this.state.shadeOriginalValues && this.state.shadeOriginalValues.hasShade) {
+        updateShadeScatter(
+          chart,
+          datasetLabel,
+          pointIndex,
+          deltaX,
+          deltaY,
+          this.props.args.options,
+          this.state.shadeOriginalValues.minValues,
+          this.state.shadeOriginalValues.maxValues
+        )
+      }
 
       chart.update("none")
     }
@@ -100,11 +145,27 @@ class ScatterChart extends StreamlitComponentBase {
       const xValue = chart.data.datasets[datasetIndex].data[pointIndex].x
       const yValue = chart.data.datasets[datasetIndex].data[pointIndex].y
 
+      // Update the main line data
       this.state.originalData[datasetLabel]["x"][pointIndex] = xValue
       this.state.originalData[datasetLabel]["y"][pointIndex] = yValue
+      
+      // Save shade scatter data using helper
+      saveShadeScatterData(
+        chart,
+        datasetLabel,
+        pointIndex,
+        this.props.args.options,
+        this.state.originalData
+      )
+      
       Streamlit.setComponentValue(this.state.originalData)
 
-      this.setState({ activePoint: null })
+      this.setState({ 
+        activePoint: null,
+        originalXValue: null,
+        originalYValue: null,
+        shadeOriginalValues: null
+      })
       this.togglePan(true)
     }
   }

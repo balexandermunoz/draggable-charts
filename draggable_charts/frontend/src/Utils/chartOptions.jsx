@@ -14,8 +14,15 @@ export function createOptions(options, theme) {
       title: createTitleOptions(options),
       legend: createLegendOptions(options),
       tooltip: createTooltipOptions(options, theme),
+      filler: {
+        propagate: false,
+      },
     },
     scales: createScalesOptions(options, theme),
+    interaction: {
+      intersect: false,
+      mode: 'index',
+    },
   }
 }
 

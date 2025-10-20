@@ -21,6 +21,7 @@ DEFAULT_OPTIONS = {
     "x_format": None,
     "y_format": ".2~s",
     "hide_legends": [],
+    "shade_between": {},  # e.g., {"Line1": {"min": "Line1_min", "max": "Line1_max", "color": "#3366CC", "alpha": 0.2}}
 }
 
 
@@ -48,6 +49,8 @@ def set_options(data: dict, options: dict) -> dict:
     options['y_format'] = options.get('y_format', DEFAULT_OPTIONS['y_format'])
     
     options['hide_legends'] = options.get('hide_legends', DEFAULT_OPTIONS['hide_legends'])
+    
+    options['shade_between'] = options.get('shade_between', DEFAULT_OPTIONS['shade_between'])
 
     data = include_colors(data, options)
     data = include_border_dash(data, options)
