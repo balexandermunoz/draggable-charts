@@ -1,6 +1,7 @@
 # draggable-charts
 
 Streamlit component that displays a interactive charts with draggable points. Users can click and drag points on the chart to adjust their values. The updated data of the chart is returned.
+Version: 1.0.7
 
 ## Installation instructions
 
