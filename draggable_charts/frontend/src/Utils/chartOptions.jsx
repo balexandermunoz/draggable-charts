@@ -101,7 +101,6 @@ function createLegendOptions(options) {
       boxHeight: 8,
       padding: 8,
       filter: function (legendItem, chartData) {
-        console.log(legendItem)
         if (options.hide_legends.includes(legendItem.text)) {
           return false
         }
