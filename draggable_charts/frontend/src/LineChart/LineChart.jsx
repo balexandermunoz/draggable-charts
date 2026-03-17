@@ -107,7 +107,7 @@ class LineChart extends StreamlitComponentBase {
   }
 
   updateLockedYBounds(chart, newYValue) {
-    if (!this.props.args.options.smooth_drag_zoom || !chart?.scales?.y) {
+    if (!chart?.scales?.y) {
       return
     }
 
@@ -131,7 +131,7 @@ class LineChart extends StreamlitComponentBase {
   }
 
   applyLockedYBounds() {
-    if (!this.props.args.options.smooth_drag_zoom || !this.lockedYBounds) {
+    if (!this.lockedYBounds) {
       return
     }
 
