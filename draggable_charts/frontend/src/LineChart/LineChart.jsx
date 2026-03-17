@@ -7,6 +7,12 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewYValue } from "../Utils/handlers"
+import {
+  updateLockedYBounds,
+  applyLockedYBounds,
+  captureOriginalYBounds,
+  snapshotOriginalChartData,
+} from "../Utils/lockedBoundsHelper"
 import { 
   storeOriginalShadeValues, 
   updateShadeLines, 
@@ -47,8 +53,8 @@ class LineChart extends StreamlitComponentBase {
           this.getZoomOptions(this.props.args.options)
         ),
       }, () => {
-        this.applyLockedYBounds()
-        this.snapshotOriginalChartData()
+        applyLockedYBounds(this)
+        snapshotOriginalChartData(this)
       })
     }
   }
@@ -62,17 +68,7 @@ class LineChart extends StreamlitComponentBase {
     this.originalChartData = JSON.parse(JSON.stringify(chart.data.datasets))
   }
 
-  captureOriginalYBounds() {
-    const chart = this.chartRef.current
-    if (!chart?.scales?.y) {
-      return
-    }
 
-    this.originalYBounds = {
-      min: chart.scales.y.min,
-      max: chart.scales.y.max,
-    }
-  }
 
   getZoomOptions(options) {
     if (!options.smooth_drag_zoom) {
@@ -93,7 +89,7 @@ class LineChart extends StreamlitComponentBase {
       this.lockedYBounds = null
 
       if (!this.originalYBounds) {
-        this.captureOriginalYBounds()
+        captureOriginalYBounds(this)
       }
 
       // Restore original bounds explicitly.
@@ -104,45 +100,6 @@ class LineChart extends StreamlitComponentBase {
 
       chart.update("none")
     }
-  }
-
-  updateLockedYBounds(chart, newYValue) {
-    if (!chart?.scales?.y) {
-      return
-    }
-
-    const yScale = chart.scales.y
-    if (!this.originalYBounds) {
-      this.captureOriginalYBounds()
-    }
-
-    if (!this.lockedYBounds) {
-      this.lockedYBounds = {
-        min: yScale.min,
-        max: yScale.max,
-      }
-    }
-
-    this.lockedYBounds.min = Math.min(this.lockedYBounds.min, newYValue)
-    this.lockedYBounds.max = Math.max(this.lockedYBounds.max, newYValue)
-
-    chart.options.scales.y.min = this.lockedYBounds.min
-    chart.options.scales.y.max = this.lockedYBounds.max
-  }
-
-  applyLockedYBounds() {
-    if (!this.lockedYBounds) {
-      return
-    }
-
-    const chart = this.chartRef.current
-    if (!chart?.options?.scales?.y) {
-      return
-    }
-
-    chart.options.scales.y.min = this.lockedYBounds.min
-    chart.options.scales.y.max = this.lockedYBounds.max
-    chart.update("none")
   }
 
   togglePan(enabled) {
@@ -195,7 +152,7 @@ class LineChart extends StreamlitComponentBase {
       const chartArea = chart.chartArea
       const yAxis = chart.scales.y
       const newYValue = calculateNewYValue(position, chartArea, yAxis)
-      this.updateLockedYBounds(chart, newYValue)
+      updateLockedYBounds(this, chart, newYValue)
       const pointIndex = this.state.activePoint.index
       const xLabel = this.state.chartData.labels[pointIndex]
       const datasetLabel = chart.data.datasets[this.state.activePoint.datasetIndex].label

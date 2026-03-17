@@ -12,6 +12,11 @@ import {
 } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
+import {
+  updateLockedYBounds,
+  applyLockedYBounds,
+  snapshotOriginalChartData,
+} from "../Utils/lockedBoundsHelper"
 
 Chart.register(...registerables, zoomPlugin)
 
@@ -19,6 +24,9 @@ class BezierChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
+    this.lockedYBounds = null
+    this.originalYBounds = null
+    this.originalChartData = null
     this.fixedData = createFixedData(
       this.props.args.data,
       this.props.args.options
@@ -54,6 +62,9 @@ class BezierChart extends StreamlitComponentBase {
           this.props.args.options
         ),
         options: createOptions(this.props.args.options, this.props.theme),
+      }, () => {
+        applyLockedYBounds(this)
+        snapshotOriginalChartData(this)
       })
     }
   }
@@ -109,6 +120,8 @@ class BezierChart extends StreamlitComponentBase {
 
       const newYValue = calculateNewYValue(position, chartArea, chart.scales.y)
       const newXValue = calculateNewXValue(position, chartArea, chart.scales.x)
+
+      updateLockedYBounds(this, chart, newYValue)
 
       // Update control point position
       this.updateControlPointPosition(chart, activePoint, newXValue, newYValue)

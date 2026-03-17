@@ -8,6 +8,11 @@ import { Streamlit, StreamlitComponentBase } from "streamlit-component-lib"
 import { createChartData } from "./chartData"
 import { createOptions } from "../Utils/chartOptions"
 import { calculateNewXValue, calculateNewYValue } from "../Utils/handlers"
+import {
+  updateLockedYBounds,
+  applyLockedYBounds,
+  snapshotOriginalChartData,
+} from "../Utils/lockedBoundsHelper"
 import { 
   storeOriginalShadeValues, 
   updateShadeScatter, 
@@ -20,6 +25,9 @@ class ScatterChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
+    this.lockedYBounds = null
+    this.originalYBounds = null
+    this.originalChartData = null
     this.state = {
       activePoint: null,
       originalXValue: null,
@@ -41,6 +49,9 @@ class ScatterChart extends StreamlitComponentBase {
           this.props.args.options
         ),
         options: createOptions(this.props.args.options, this.props.theme),
+      }, () => {
+        applyLockedYBounds(this)
+        snapshotOriginalChartData(this)
       })
     }
   }
@@ -110,6 +121,8 @@ class ScatterChart extends StreamlitComponentBase {
         chart.scales.x,
         this.props.args.options.x_type
       )
+      
+      updateLockedYBounds(this, chart, newYValue)
       
       // Calculate the deltas from the original positions
       const deltaX = newXValue - this.state.originalXValue
