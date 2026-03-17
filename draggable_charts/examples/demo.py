@@ -47,6 +47,7 @@ plot_options = {
     "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)] (Col2 is dashed)
     "x_format": None, # default ".2~s". Check https://d3js.org/d3-format#locale_format
     "y_format": ".2~s", # default ".2~s" (formats large numbers)
+    "smooth_drag_zoom": True, # optional: unlock smoother Y-axis drag expansion and double-click zoom reset
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="custom_line_chart")
 

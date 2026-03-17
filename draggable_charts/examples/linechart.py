@@ -29,6 +29,7 @@ plot_options = {
     'labels': {"Col1": "Custom label", "Col2": "Custom 2"},  # default: {}
     "point_radius": [3, 5, 2], # default: [3]
     "border_dash": [(0, 0), (5, 5)], # default: [(0, 0)]
+    "smooth_drag_zoom": True, # optional: smoother Y drag expansion and double-click reset
 
 }
 new_data = line_chart(data=initial_data, options=plot_options, key="my_chart")

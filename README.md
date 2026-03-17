@@ -118,6 +118,7 @@ All options are sent in the same dictionary `options`. There are common options 
   - `'labels'`: Default {}. Dictionary with a map from original labels to custom labels.
   - `'x_format'`: Default None. A printf-style format string controlling how the canvas should display X numeric ticks. Check: https://d3js.org/d3-format#locale_format
   - `'y_format'`: Default `".2~s"`. A printf-style format string controlling how the canvas should display Y numeric ticks.
+    - `'smooth_drag_zoom'`: Default `False`. Line-chart-only option that relaxes the Y zoom limit while dragging points outside the current view and lets users double-click the chart to reset zoom to the original bounds.
 
   ### Chart options:
   - `'show_line`: Boolean that indicates whether to display the line connecting the points on the graph.

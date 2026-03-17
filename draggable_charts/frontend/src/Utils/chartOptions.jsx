@@ -1,7 +1,7 @@
 import { Chart } from "chart.js"
 import { format as d3Format } from "https://cdn.skypack.dev/d3-format@3"
 
-export function createOptions(options, theme) {
+export function createOptions(options, theme, zoomOptionsOverride = null) {
   return {
     responsive: true,
     indexAxis: "x",
@@ -10,7 +10,7 @@ export function createOptions(options, theme) {
     },
     onHover: createHoverOptions(options),
     plugins: {
-      zoom: createZoomOptions(),
+      zoom: createZoomOptions(zoomOptionsOverride),
       title: createTitleOptions(options),
       legend: createLegendOptions(options),
       tooltip: createTooltipOptions(options, theme),
@@ -45,8 +45,8 @@ function determineCursorStyle(label, options) {
   return "crosshair"
 }
 
-function createZoomOptions() {
-  return {
+function createZoomOptions(zoomOptionsOverride = null) {
+  const defaultZoomOptions = {
     zoom: {
       wheel: {
         enabled: true,
@@ -59,6 +59,27 @@ function createZoomOptions() {
     limits: {
       x: { min: "original", max: "original" },
       y: { min: "original", max: "original" },
+    },
+  }
+
+  if (!zoomOptionsOverride) {
+    return defaultZoomOptions
+  }
+
+  return {
+    ...defaultZoomOptions,
+    ...zoomOptionsOverride,
+    zoom: {
+      ...defaultZoomOptions.zoom,
+      ...(zoomOptionsOverride.zoom || {}),
+    },
+    pan: {
+      ...defaultZoomOptions.pan,
+      ...(zoomOptionsOverride.pan || {}),
+    },
+    limits: {
+      ...defaultZoomOptions.limits,
+      ...(zoomOptionsOverride.limits || {}),
     },
   }
 }

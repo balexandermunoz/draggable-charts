@@ -25,7 +25,7 @@ class LineChart extends StreamlitComponentBase {
       shadeOriginalValues: null,  // Store original min/max values for shade
       originalData: props.args.data,
       chartData: createChartData(props.args.data, props.args.options.colors),
-      options: createOptions(props.args.options, props.theme),
+      options: createOptions(props.args.options, props.theme, this.getZoomOptions(props.args.options)),
     }
   }
 
@@ -38,8 +38,31 @@ class LineChart extends StreamlitComponentBase {
           this.props.args.data,
           this.props.args.options
         ),
-        options: createOptions(this.props.args.options, this.props.theme),
+        options: createOptions(
+          this.props.args.options,
+          this.props.theme,
+          this.getZoomOptions(this.props.args.options)
+        ),
       })
+    }
+  }
+
+  getZoomOptions(options) {
+    if (!options.smooth_drag_zoom) {
+      return null
+    }
+
+    return {
+      limits: {
+        x: { min: "original", max: "original" },
+        y: {},
+      },
+    }
+  }
+
+  doubleClickHandler = () => {
+    if (this.props.args.options.smooth_drag_zoom && this.chartRef.current?.resetZoom) {
+      this.chartRef.current.resetZoom()
     }
   }
 
@@ -162,6 +185,7 @@ class LineChart extends StreamlitComponentBase {
         onPointerDown={this.downHandler}
         onPointerUp={this.upHandler}
         onPointerMove={this.moveHandler}
+        onDoubleClick={this.doubleClickHandler}
       />
     )
   }
