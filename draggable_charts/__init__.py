@@ -1,3 +1,3 @@
-_RELEASE = False
+_RELEASE = True
 
 from .widgets import *
