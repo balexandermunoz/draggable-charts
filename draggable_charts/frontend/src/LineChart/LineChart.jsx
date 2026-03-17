@@ -19,6 +19,9 @@ class LineChart extends StreamlitComponentBase {
   constructor(props) {
     super(props)
     this.chartRef = React.createRef()
+    this.lockedYBounds = null
+    this.originalYBounds = null
+    this.originalChartData = null
     this.state = {
       activePoint: null,
       originalYValue: null,
@@ -43,7 +46,31 @@ class LineChart extends StreamlitComponentBase {
           this.props.theme,
           this.getZoomOptions(this.props.args.options)
         ),
+      }, () => {
+        this.applyLockedYBounds()
+        this.snapshotOriginalChartData()
       })
+    }
+  }
+
+  snapshotOriginalChartData() {
+    const chart = this.chartRef.current
+    if (!chart?.data?.datasets) {
+      return
+    }
+
+    this.originalChartData = JSON.parse(JSON.stringify(chart.data.datasets))
+  }
+
+  captureOriginalYBounds() {
+    const chart = this.chartRef.current
+    if (!chart?.scales?.y) {
+      return
+    }
+
+    this.originalYBounds = {
+      min: chart.scales.y.min,
+      max: chart.scales.y.max,
     }
   }
 
@@ -61,9 +88,61 @@ class LineChart extends StreamlitComponentBase {
   }
 
   doubleClickHandler = () => {
-    if (this.props.args.options.smooth_drag_zoom && this.chartRef.current?.resetZoom) {
-      this.chartRef.current.resetZoom()
+    if (this.props.args.options.smooth_drag_zoom && this.chartRef.current) {
+      const chart = this.chartRef.current
+      this.lockedYBounds = null
+
+      if (!this.originalYBounds) {
+        this.captureOriginalYBounds()
+      }
+
+      // Restore original bounds explicitly.
+      if (chart.options?.scales?.y && this.originalYBounds) {
+        chart.options.scales.y.min = this.originalYBounds.min
+        chart.options.scales.y.max = this.originalYBounds.max
+      }
+
+      chart.update("none")
     }
+  }
+
+  updateLockedYBounds(chart, newYValue) {
+    if (!this.props.args.options.smooth_drag_zoom || !chart?.scales?.y) {
+      return
+    }
+
+    const yScale = chart.scales.y
+    if (!this.originalYBounds) {
+      this.captureOriginalYBounds()
+    }
+
+    if (!this.lockedYBounds) {
+      this.lockedYBounds = {
+        min: yScale.min,
+        max: yScale.max,
+      }
+    }
+
+    this.lockedYBounds.min = Math.min(this.lockedYBounds.min, newYValue)
+    this.lockedYBounds.max = Math.max(this.lockedYBounds.max, newYValue)
+
+    chart.options.scales.y.min = this.lockedYBounds.min
+    chart.options.scales.y.max = this.lockedYBounds.max
+  }
+
+  applyLockedYBounds() {
+    if (!this.props.args.options.smooth_drag_zoom || !this.lockedYBounds) {
+      return
+    }
+
+    const chart = this.chartRef.current
+    if (!chart?.options?.scales?.y) {
+      return
+    }
+
+    chart.options.scales.y.min = this.lockedYBounds.min
+    chart.options.scales.y.max = this.lockedYBounds.max
+    chart.update("none")
   }
 
   togglePan(enabled) {
@@ -116,6 +195,7 @@ class LineChart extends StreamlitComponentBase {
       const chartArea = chart.chartArea
       const yAxis = chart.scales.y
       const newYValue = calculateNewYValue(position, chartArea, yAxis)
+      this.updateLockedYBounds(chart, newYValue)
       const pointIndex = this.state.activePoint.index
       const xLabel = this.state.chartData.labels[pointIndex]
       const datasetLabel = chart.data.datasets[this.state.activePoint.datasetIndex].label
